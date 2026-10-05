@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="ext-resource-dependency" content="assets/projects/p1.png" data-resource-id="p1" />
+<meta name="ext-resource-dependency" content="assets/projects/p2.png" data-resource-id="p2" />
+<meta name="ext-resource-dependency" content="assets/projects/p3.png" data-resource-id="p3" />
+<meta name="ext-resource-dependency" content="assets/projects/p4.png" data-resource-id="p4" />
+<meta name="ext-resource-dependency" content="assets/projects/p5.png" data-resource-id="p5" />
+<meta name="ext-resource-dependency" content="assets/projects/p6.png" data-resource-id="p6" />
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#07080d">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#07080d"/>
+    <ellipse cx="600" cy="400" rx="320" ry="118" fill="none" stroke="#5cd9ff" stroke-width="5" opacity="0.5"/>
+    <ellipse cx="600" cy="400" rx="118" ry="320" fill="none" stroke="#6ea8ff" stroke-width="5" opacity="0.4"/>
+    <circle cx="600" cy="400" r="72" fill="#5cd9ff"/>
+    <text x="600" y="417" font-family="monospace" font-size="50" font-weight="700" fill="#06303f" text-anchor="middle">RW</text>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:#07080d;}
+  ::selection{background:rgba(92,217,255,0.25);color:#fff;}
+  @keyframes spotIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  @keyframes ringspin{to{transform:rotate(360deg);}}
+  @keyframes glowIn{from{opacity:0;transform:translateY(36px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes ringspinRev{to{transform:rotate(-360deg);}}
+  @keyframes corePulse{0%,100%{transform:scale(1);opacity:0.85;}50%{transform:scale(1.14);opacity:1;}}
+  ::-webkit-scrollbar{width:9px;}
+  ::-webkit-scrollbar-track{background:#07080d;}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:10px;}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="--bg:#07080d;--bg2:#0b0d14;--panel:rgba(255,255,255,0.025);--panel2:rgba(255,255,255,0.04);--accent:#5cd9ff;--accent2:#6ea8ff;--glow:rgba(92,217,255,0.20);--line:rgba(255,255,255,0.09);--text:#eef2f8;--muted:#878fa1;font-family:'Space Grotesk',sans-serif;color:var(--text);background:var(--bg);min-height:100vh;position:relative;overflow-x:hidden;">
+
+  {{ glassFilter }}
+  <!-- ambient -->
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1100px 700px at 78% -8%,var(--glow),transparent 62%),var(--bg);"></div>
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.5;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;mask:radial-gradient(900px 600px at 50% 0%,#000,transparent 78%);"></div>
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px clamp(18px,4vw,56px);backdrop-filter:blur(16px);background:linear-gradient(180deg,rgba(7,8,13,0.86),rgba(7,8,13,0.4));border-bottom:1px solid var(--line);">
+    <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:13px;background:none;border:none;cursor:pointer;padding:0;">
+      <div style="position:relative;width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:11px;background:linear-gradient(160deg,var(--panel2),transparent);">
+        <span style="font-weight:700;font-size:16px;letter-spacing:0.5px;color:var(--accent);">RW</span>
+      </div>
+      <div style="text-align:left;line-height:1;">
+        <div style="font-weight:700;font-size:15px;letter-spacing:1.5px;color:var(--text);">DEAL DESK</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px;">BY RENOWAVE BUILDERS</div>
+      </div>
+    </button>
+
+    <div style="display:flex;align-items:center;gap:4px;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+        <button onClick="{{ item.onClick }}" style="position:relative;background:none;border:none;cursor:pointer;font-size:13.5px;font-weight:500;letter-spacing:0.2px;color:{{ item.color }};padding:9px 15px;" style-hover="color:var(--text);">
+          {{ item.label }}
+          <sc-if value="{{ item.active }}" hint-placeholder-val="{{ true }}">
+            <span style="position:absolute;left:15px;right:15px;bottom:1px;height:1.5px;background:var(--accent);"></span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:13px;">
+      <div style="display:flex;align-items:center;gap:6px;padding:5px;border:1px solid var(--line);border-radius:30px;">
+        <sc-for list="{{ themeChips }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.onClick }}" title="{{ t.name }}" style="width:15px;height:15px;border-radius:50%;cursor:pointer;background:{{ t.swatch }};border:1.5px solid {{ t.ring }};padding:0;"></button>
+        </sc-for>
+      </div>
+      <button onClick="{{ connectWallet }}" style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 15px;cursor:pointer;" style-hover="border-color:var(--accent);">
+        <span style="width:7px;height:7px;border-radius:50%;background:{{ walletDot }};box-shadow:0 0 7px {{ walletDot }};"></span>
+        {{ walletLabel }}
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;">
+    <section ref="{{ heroRef }}" style="--mx:0;--my:0;position:relative;min-height:100vh;display:flex;align-items:center;padding:120px clamp(18px,4vw,56px) 60px;overflow:hidden;">
+      <!-- spotlight -->
+      <div style="position:absolute;top:-25%;left:-12%;width:70%;height:150%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,255,255,0.11),rgba(120,190,255,0.05),transparent 72%);filter:blur(30px);transform:translate(calc(var(--mx)*22px),calc(var(--my)*16px));animation:spotIn 2.4s ease forwards;"></div>
+
+      <div style="position:relative;z-index:2;display:flex;align-items:center;gap:clamp(20px,4vw,56px);max-width:1240px;margin:0 auto;width:100%;flex-wrap:wrap;">
+        <!-- left -->
+        <div style="flex:1 1 440px;min-width:300px;transform:translate(calc(var(--mx)*-6px),calc(var(--my)*-4px));">
+          <div style="display:inline-flex;align-items:center;gap:9px;padding:7px 13px;border:1px solid var(--line);border-radius:30px;background:var(--panel);margin-bottom:28px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--glow);"></span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--muted);">WEB3 PAYMENTS · REAL ESTATE &amp; CONSTRUCTION</span>
+          </div>
+          <h1 style="font-weight:700;font-size:clamp(40px,5.6vw,68px);line-height:1.04;margin:0;letter-spacing:-1.5px;">
+            Build it.<br>Fund it <span style="color:var(--accent);">on-chain.</span>
+          </h1>
+          <p style="font-size:clamp(15px,1.4vw,17px);line-height:1.7;color:var(--muted);max-width:480px;margin:22px 0 34px;">
+            The digital desk where construction meets crypto. Collect card or wallet payments for development, renovation, painting and milestones — settled instantly through Stripe on-ramp and trustless Web3 escrow.
+          </p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <button onClick="{{ goPay }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:15px 26px;cursor:pointer;transition:transform 0.3s ease;" style-hover="transform:scale(1.04);"><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;border-radius:12px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,0.18),inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.6),inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.6),inset 1px 1px 1px -0.5px rgba(255,255,255,0.45),inset -1px -1px 1px -0.5px rgba(255,255,255,0.45),inset 0 0 6px 6px rgba(255,255,255,0.05),0 0 12px rgba(0,0,0,0.2);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:9px;">Start a payment {{ arrowDark }}</span></button>
+            <button onClick="{{ goServices }}" style="font-size:14px;font-weight:500;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:15px 24px;cursor:pointer;" style-hover="border-color:var(--accent);">Explore services</button>
+          </div>
+          <div style="display:flex;gap:30px;margin-top:46px;flex-wrap:wrap;">
+            <sc-for list="{{ heroStats }}" as="h" hint-placeholder-count="3">
+              <div>
+                <div style="font-size:25px;font-weight:700;letter-spacing:-0.5px;">{{ h.v }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.5px;color:var(--muted);margin-top:5px;">{{ h.k }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- right: 3D scene -->
+        <div style="flex:1 1 420px;min-width:300px;position:relative;height:clamp(360px,52vh,540px);border:1px solid var(--line);border-radius:20px;overflow:hidden;background:radial-gradient(120% 100% at 50% 0%,rgba(92,217,255,0.06),transparent 60%),#06070c;">
+          <!-- offline 3D settlement scene -->
+          <div style="position:absolute;left:-30%;right:-30%;bottom:-6%;height:48%;background-image:linear-gradient(var(--accent) 1px,transparent 1px),linear-gradient(90deg,var(--accent) 1px,transparent 1px);background-size:38px 38px;opacity:0.13;transform:perspective(340px) rotateX(72deg);transform-origin:bottom;-webkit-mask:linear-gradient(to top,#000,transparent 84%);mask:linear-gradient(to top,#000,transparent 84%);"></div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;"><svg viewBox="0 0 240 240" width="82%" style="opacity:0.5;animation:ringspin 32s linear infinite;"><ellipse cx="120" cy="120" rx="106" ry="40" fill="none" stroke="var(--accent)" stroke-width="0.8"/></svg></div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;"><svg viewBox="0 0 240 240" width="66%" style="opacity:0.45;animation:ringspinRev 24s linear infinite;"><ellipse cx="120" cy="120" rx="40" ry="106" fill="none" stroke="var(--accent2)" stroke-width="0.8"/></svg></div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;"><svg viewBox="0 0 240 240" width="92%" style="opacity:0.28;animation:ringspin 46s linear infinite;"><circle cx="120" cy="120" r="114" fill="none" stroke="var(--accent)" stroke-width="0.6" stroke-dasharray="2 8"/></svg></div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;"><div style="position:relative;width:60%;aspect-ratio:1;animation:ringspin 15s linear infinite;"><div style="position:absolute;top:-9px;left:50%;margin-left:-9px;width:18px;height:18px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent),0 0 26px var(--glow);"></div></div></div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;"><div style="position:relative;width:74%;aspect-ratio:1;animation:ringspinRev 19s linear infinite;"><div style="position:absolute;top:-7px;left:50%;margin-left:-7px;width:14px;height:14px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2);"></div></div></div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;"><div style="position:relative;width:44%;aspect-ratio:1;animation:ringspin 11s linear infinite;"><div style="position:absolute;top:-6px;left:50%;margin-left:-6px;width:11px;height:11px;border-radius:50%;background:#46e6a0;box-shadow:0 0 12px #46e6a0;"></div></div></div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;"><div style="position:relative;width:104px;height:104px;display:grid;place-items:center;"><div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(191,244,255,0.9),rgba(92,217,255,0.55) 40%,rgba(92,217,255,0) 72%);animation:corePulse 3.6s ease-in-out infinite;"></div><div style="position:relative;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 38% 32%,#ffffff,#a6ebff 48%,#2f93cc);box-shadow:0 0 26px var(--accent),0 0 60px var(--glow);"><span style="font-weight:700;font-size:15px;letter-spacing:0.5px;color:#06303f;">RW</span></div></div></div>
+          <!-- live chip -->
+          <div style="position:absolute;top:14px;left:14px;z-index:2;display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:30px;background:rgba(7,8,13,0.6);backdrop-filter:blur(8px);">
+            <span style="width:6px;height:6px;border-radius:50%;background:#46e6a0;box-shadow:0 0 7px #46e6a0;animation:blink 1.8s infinite;"></span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);">live · avg settlement 11s</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section style="position:relative;z-index:1;padding:80px clamp(18px,4vw,56px);max-width:1200px;margin:0 auto;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:14px;">HOW IT WORKS</div>
+      <h2 style="font-weight:700;font-size:clamp(26px,3.2vw,40px);margin:0 0 46px;max-width:640px;line-height:1.12;letter-spacing:-1px;">Pay any way. Settled the trustless way.</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:16px;">
+        <sc-for list="{{ processSteps }}" as="p" hint-placeholder-count="4">
+          <div style="position:relative;padding:26px 22px;border:1px solid var(--line);border-radius:16px;background:var(--panel);" style-hover="border-color:rgba(255,255,255,0.18);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+              <div style="width:42px;height:42px;border-radius:11px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);">{{ p.icon }}</div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);">0{{ p.n }}</span>
+            </div>
+            <div style="font-size:16.5px;font-weight:600;margin-bottom:8px;letter-spacing:-0.2px;">{{ p.title }}</div>
+            <div style="font-size:13px;line-height:1.6;color:var(--muted);">{{ p.desc }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- PROJECTS · GLOW HORIZON + CARD FAN -->
+    <section style="position:relative;overflow:hidden;background:#050507;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:88px clamp(18px,4vw,56px) 104px;margin-top:44px;">
+      <div style="position:absolute;top:0;left:0;right:0;height:600px;pointer-events:none;animation:glowIn 2s cubic-bezier(0.16,1,0.3,1) both;">
+        <div style="position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:min(1100px,150%);height:380px;border-radius:50%;background:radial-gradient(ellipse 60% 72% at 50% 30%,#b66bff 0%,#6a3ae0 28%,rgba(48,22,150,0.6) 50%,transparent 72%);filter:blur(42px);opacity:1;"></div>
+        <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);width:min(700px,92%);height:160px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,0.82),rgba(214,196,255,0.22) 46%,transparent 68%);filter:blur(16px);"></div>
+        <div style="position:absolute;top:72px;left:50%;transform:translateX(-50%);width:min(520px,80%);height:4px;border-radius:50%;background:#ffffff;box-shadow:0 0 24px 6px rgba(255,255,255,0.6),0 2px 50px 14px #A558FB;"></div>
+      </div>
+
+      <div style="position:relative;z-index:2;max-width:1100px;margin:0 auto;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:#c8a8ff;margin-bottom:14px;">RECENT TRANSFORMATIONS</div>
+        <h2 style="font-weight:700;font-size:clamp(28px,3.6vw,46px);margin:0 0 14px;letter-spacing:-1.2px;">From blueprint to handover.</h2>
+        <p style="color:var(--muted);font-size:15px;line-height:1.6;max-width:520px;margin:0 auto;">Every project below was funded, escrowed and settled on-chain through Deal Desk. Click a card to bring it forward.</p>
+
+        <div style="position:relative;height:430px;max-width:760px;margin:48px auto 0;">
+          <sc-for list="{{ fanCards }}" as="c" hint-placeholder-count="6">
+            <div onClick="{{ c.onClick }}" style="position:absolute;left:50%;top:30px;width:236px;height:330px;margin-left:-118px;border-radius:18px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,0.14);box-shadow:0 30px 60px rgba(0,0,0,0.55);transition:transform 0.55s cubic-bezier(0.16,1,0.3,1),opacity 0.4s ease;transform:{{ c.transform }};z-index:{{ c.z }};opacity:{{ c.opacity }};">
+              <img src="{{ c.img }}" alt="{{ c.title }}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,7,0.9),rgba(5,5,7,0.1) 52%,transparent);"></div>
+              <div style="position:absolute;left:16px;right:16px;bottom:14px;text-align:left;">
+                <div style="font-size:13.5px;font-weight:600;color:#fff;letter-spacing:-0.2px;">{{ c.title }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(255,255,255,0.62);margin-top:4px;">{{ c.city }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:22px;margin-top:6px;">
+          <button onClick="{{ prevProject }}" style="width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;" style-hover="border-color:#c8a8ff;"><span style="display:inline-flex;transform:scaleX(-1);">{{ chevR }}</span></button>
+          <div style="min-width:240px;">
+            <div style="font-size:19px;font-weight:700;letter-spacing:-0.4px;">{{ activeTitle }}</div>
+            <div style="color:var(--muted);font-size:12.5px;margin-top:4px;">{{ activeMeta }} · {{ activeCity }}</div>
+          </div>
+          <button onClick="{{ nextProject }}" style="width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;" style-hover="border-color:#c8a8ff;">{{ chevR }}</button>
+        </div>
+
+        <div style="display:inline-flex;align-items:center;gap:9px;margin-top:22px;padding:8px 15px;border:1px solid var(--line);border-radius:30px;background:rgba(255,255,255,0.03);">
+          <span style="width:6px;height:6px;border-radius:50%;background:#46e6a0;box-shadow:0 0 7px #46e6a0;"></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">{{ activePrice }} paid on-chain · settled in 9s</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="position:relative;z-index:1;padding:24px clamp(18px,4vw,56px) 96px;max-width:1200px;margin:0 auto;">
+      <div style="position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;padding:clamp(32px,5vw,60px);background:linear-gradient(120deg,rgba(92,217,255,0.06),transparent 55%),var(--panel);">
+        <div style="position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;">
+          <div>
+            <h3 style="font-weight:700;font-size:clamp(22px,2.8vw,34px);margin:0 0 10px;letter-spacing:-0.8px;">Ready to collect your first crypto payment?</h3>
+            <p style="color:var(--muted);margin:0;max-width:520px;line-height:1.6;font-size:15px;">From a $400 paint job to a $4M development draw — your client pays by card or wallet, you settle in seconds.</p>
+          </div>
+          <button onClick="{{ goPay }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:15px 26px;cursor:pointer;white-space:nowrap;transition:transform 0.3s ease;" style-hover="transform:scale(1.04);"><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;border-radius:12px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,0.18),inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.6),inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.6),inset 1px 1px 1px -0.5px rgba(255,255,255,0.45),inset -1px -1px 1px -0.5px rgba(255,255,255,0.45),inset 0 0 6px 6px rgba(255,255,255,0.05),0 0 12px rgba(0,0,0,0.2);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:9px;">Get paid {{ arrowDark }}</span></button>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ============ SERVICES ============ -->
+  <sc-if value="{{ isServices }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;padding:128px clamp(18px,4vw,56px) 96px;max-width:1200px;margin:0 auto;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:14px;">SERVICES</div>
+    <h1 style="font-weight:700;font-size:clamp(32px,4.4vw,56px);margin:0 0 16px;line-height:1.06;letter-spacing:-1.5px;">Everything you build,<br>paid the digital way.</h1>
+    <p style="color:var(--muted);font-size:16px;line-height:1.7;max-width:580px;margin:0 0 46px;">Six rails covering the full lifecycle of a project — from breaking ground to handing over a tokenized deed. Each accepts Stripe card on-ramp or direct crypto.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;">
+      <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+        <div style="position:relative;padding:28px 24px;border:1px solid var(--line);border-radius:16px;background:var(--panel);transition:transform 0.2s,border-color 0.2s;" style-hover="border-color:rgba(255,255,255,0.18);transform:translateY(-3px);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div style="width:48px;height:48px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);">{{ s.icon }}</div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:5px 10px;">{{ s.tag }}</span>
+          </div>
+          <div style="font-size:18px;font-weight:600;margin-bottom:10px;letter-spacing:-0.3px;">{{ s.title }}</div>
+          <div style="font-size:13.5px;line-height:1.65;color:var(--muted);margin-bottom:18px;">{{ s.desc }}</div>
+          <button onClick="{{ s.onClick }}" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;">Pay for this {{ arrowAccent }}</button>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ PAY ============ -->
+  <sc-if value="{{ isPay }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;padding:120px clamp(18px,4vw,56px) 96px;max-width:840px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:36px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:12px;">SECURE CHECKOUT</div>
+      <h1 style="font-weight:700;font-size:clamp(28px,3.6vw,44px);margin:0;letter-spacing:-1px;">Make a payment</h1>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:0;margin-bottom:36px;max-width:540px;margin-left:auto;margin-right:auto;">
+      <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;flex:1;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
+            <div style="width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid {{ st.ring }};color:{{ st.fg }};background:{{ st.bg }};transition:all 0.3s;">{{ st.mark }}</div>
+            <span style="font-size:10px;letter-spacing:0.3px;color:{{ st.label }};white-space:nowrap;">{{ st.name }}</span>
+          </div>
+          <sc-if value="{{ st.line }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;height:1.5px;margin:0 6px 22px;background:{{ st.lineColor }};"></div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="position:relative;border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(10px);padding:clamp(24px,4vw,38px);">
+
+      <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px;">What are you paying for?</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:22px;">Select a service to fund.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+          <sc-for list="{{ payServices }}" as="ps" hint-placeholder-count="6">
+            <button onClick="{{ ps.onClick }}" style="text-align:left;display:flex;align-items:center;gap:13px;padding:15px;border:1px solid {{ ps.border }};border-radius:12px;background:{{ ps.bg }};cursor:pointer;color:var(--text);transition:all 0.18s;" style-hover="border-color:rgba(255,255,255,0.22);">
+              <span style="width:38px;height:38px;flex-shrink:0;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);">{{ ps.icon }}</span>
+              <span style="font-size:13.5px;font-weight:500;line-height:1.3;">{{ ps.name }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px;">How much?</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:22px;">Paying for <span style="color:var(--accent);">{{ selectedService }}</span></div>
+        <div style="position:relative;margin-bottom:16px;">
+          <span style="position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:30px;color:var(--muted);">$</span>
+          <input value="{{ amount }}" onInput="{{ onAmount }}" inputMode="decimal" placeholder="0.00" style="width:100%;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:34px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px 20px 16px 44px;outline:none;" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;">
+          <sc-for list="{{ quickAmounts }}" as="q" hint-placeholder-count="4">
+            <button onClick="{{ q.onClick }}" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;" style-hover="border-color:var(--accent);">{{ q.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);">
+          <span style="color:var(--muted);font-size:13px;">Estimated in crypto</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:var(--accent);">{{ ethEst }} ETH&nbsp;·&nbsp;{{ totalFmt }} USDC</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px;">How do you want to pay?</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:22px;">Both settle into the same on-chain escrow.</div>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:22px;">
+          <sc-for list="{{ methods }}" as="m" hint-placeholder-count="2">
+            <button onClick="{{ m.onClick }}" style="text-align:left;display:flex;align-items:center;gap:15px;padding:18px;border:1px solid {{ m.border }};border-radius:13px;background:{{ m.bg }};cursor:pointer;color:var(--text);">
+              <span style="width:44px;height:44px;flex-shrink:0;border-radius:11px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);">{{ m.icon }}</span>
+              <span style="flex:1;">
+                <span style="display:block;font-size:15px;font-weight:600;margin-bottom:3px;">{{ m.title }}</span>
+                <span style="display:block;font-size:12.5px;color:var(--muted);line-height:1.5;">{{ m.desc }}</span>
+              </span>
+              <span style="width:20px;height:20px;border-radius:50%;border:1.5px solid {{ m.dotRing }};display:grid;place-items:center;flex-shrink:0;"><span style="width:10px;height:10px;border-radius:50%;background:{{ m.dotFill }};"></span></span>
+            </button>
+          </sc-for>
+        </div>
+        <input value="{{ email }}" onInput="{{ onEmail }}" placeholder="Email for receipt" style="width:100%;font-size:14.5px;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:14px 17px;outline:none;font-family:'Space Grotesk',sans-serif;" />
+        <div style="display:flex;align-items:center;gap:9px;margin-top:16px;font-size:11.5px;color:var(--muted);">
+          <span style="color:var(--accent);display:grid;place-items:center;">{{ lockIcon }}</span> Encrypted via Stripe on-ramp · funds custodied in an audited escrow contract until released.
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:20px;letter-spacing:-0.3px;">Review &amp; confirm</div>
+        <div style="border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-bottom:20px;">
+          <sc-for list="{{ summary }}" as="r" hint-placeholder-count="5">
+            <div style="display:flex;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--bg2);">
+              <span style="color:var(--muted);font-size:13px;">{{ r.k }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ r.color }};">{{ r.v }}</span>
+            </div>
+          </sc-for>
+          <div style="display:flex;justify-content:space-between;padding:17px 18px;background:var(--panel2);">
+            <span style="font-size:16px;font-weight:600;">Total</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--accent);">{{ totalFmt }}</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--muted);">
+          <span style="color:var(--accent);display:grid;place-items:center;">{{ chainIcon }}</span> Settles to escrow <span style="font-family:'JetBrains Mono',monospace;color:var(--accent2);">0x6f2A…3a21</span> on Base.
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isDone }}" hint-placeholder-val="{{ true }}">
+      <div style="text-align:center;padding:14px 0;">
+        <div style="width:72px;height:72px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--accent);color:var(--accent);box-shadow:0 0 36px var(--glow);background:var(--panel2);">{{ checkIcon }}</div>
+        <div style="font-size:24px;font-weight:700;margin-bottom:10px;letter-spacing:-0.5px;">Payment confirmed</div>
+        <div style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:22px;max-width:420px;margin-left:auto;margin-right:auto;">{{ totalFmt }} for {{ selectedService }} has been settled into escrow. A receipt is on its way{{ emailSuffix }}.</div>
+        <div style="display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);border:1px solid var(--line);border-radius:30px;padding:10px 16px;background:var(--bg2);margin-bottom:28px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#46e6a0;box-shadow:0 0 7px #46e6a0;"></span>
+          TX {{ txHash }}
+        </div>
+        <div>
+          <button onClick="{{ reset }}" style="font-size:13px;font-weight:500;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px 24px;cursor:pointer;" style-hover="border-color:var(--accent);">Make another payment</button>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;justify-content:space-between;gap:14px;margin-top:30px;padding-top:24px;border-top:1px solid var(--line);">
+        <button onClick="{{ back }}" style="font-size:13px;font-weight:500;color:{{ backColor }};background:none;border:1px solid var(--line);border-radius:10px;padding:13px 22px;cursor:{{ backCursor }};">Back</button>
+        <button onClick="{{ next }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:13px 26px;cursor:{{ nextCursor }};opacity:{{ nextOpacity }};transition:transform 0.3s ease;" style-hover="transform:scale(1.04);"><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;border-radius:12px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,0.18),inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.6),inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.6),inset 1px 1px 1px -0.5px rgba(255,255,255,0.45),inset -1px -1px 1px -0.5px rgba(255,255,255,0.45),inset 0 0 6px 6px rgba(255,255,255,0.05),0 0 12px rgba(0,0,0,0.2);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;">{{ nextLabel }} {{ arrowDark }}</span></button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ ABOUT ============ -->
+  <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;padding:128px clamp(18px,4vw,56px) 96px;max-width:1080px;margin:0 auto;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:14px;">ABOUT</div>
+    <h1 style="font-weight:700;font-size:clamp(32px,4.4vw,54px);margin:0 0 24px;line-height:1.08;letter-spacing:-1.5px;max-width:740px;">We turned the construction invoice into a smart contract.</h1>
+    <p style="color:var(--muted);font-size:16.5px;line-height:1.8;max-width:640px;margin:0 0 52px;">RenoWave Builders spent a decade chasing wire transfers, escrow letters and 60-day payment cycles. Deal Desk is our answer: a payment desk where every job — from a single room repaint to a ground-up tower — is funded, escrowed and settled on-chain in minutes, not months.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:56px;">
+      <sc-for list="{{ stats }}" as="x" hint-placeholder-count="4">
+        <div style="padding:24px 22px;border:1px solid var(--line);border-radius:14px;background:var(--panel);">
+          <div style="font-size:30px;font-weight:700;letter-spacing:-1px;">{{ x.v }}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:0.3px;margin-top:7px;">{{ x.k }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:56px;">
+      <sc-for list="{{ values }}" as="v" hint-placeholder-count="3">
+        <div style="padding:26px 24px;border:1px solid var(--line);border-radius:14px;background:var(--panel);">
+          <div style="width:44px;height:44px;border-radius:11px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);margin-bottom:16px;">{{ v.icon }}</div>
+          <div style="font-size:16.5px;font-weight:600;margin-bottom:9px;letter-spacing:-0.2px;">{{ v.title }}</div>
+          <div style="font-size:13px;line-height:1.65;color:var(--muted);">{{ v.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;padding:clamp(30px,5vw,54px);background:linear-gradient(120deg,rgba(92,217,255,0.06),transparent 55%),var(--panel);text-align:center;">
+      <h3 style="font-weight:700;font-size:clamp(22px,3vw,34px);margin:0 0 14px;letter-spacing:-0.8px;">Build with us. Get paid on-chain.</h3>
+      <p style="color:var(--muted);margin:0 auto 24px;max-width:460px;line-height:1.6;font-size:15px;">Wallets, cards and contracts — all on one desk.</p>
+      <button onClick="{{ goPay }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:15px 28px;cursor:pointer;transition:transform 0.3s ease;" style-hover="transform:scale(1.04);"><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;border-radius:12px;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;border-radius:12px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,0.18),inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.6),inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.6),inset 1px 1px 1px -0.5px rgba(255,255,255,0.45),inset -1px -1px 1px -0.5px rgba(255,255,255,0.45),inset 0 0 6px 6px rgba(255,255,255,0.05),0 0 12px rgba(0,0,0,0.2);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:9px;">Open the desk {{ arrowDark }}</span></button>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- FOOTER -->
+  <footer style="position:relative;z-index:1;border-top:1px solid var(--line);padding:44px clamp(18px,4vw,56px);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);border-radius:9px;background:var(--panel2);"><span style="font-weight:700;font-size:13px;color:var(--accent);">RW</span></div>
+        <div style="line-height:1.35;">
+          <div style="font-weight:700;font-size:13px;letter-spacing:1px;">DEAL DESK</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);">dealsdesk.io · by RenoWave Builders</div>
+        </div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-align:right;line-height:1.7;">
+        Payments via Stripe on-ramp &amp; Web3 escrow · Demo UI<br>© 2026 RenoWave Builders. All rights reserved.
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = {
+    page: 'home', theme: 'cyan', wallet: null,
+    step: 0, service: null, amount: '', method: 'card', email: '', txHash: '', activeProject: 2
+  };
+
+  themes = {
+    cyan:   {'--bg':'#07080d','--bg2':'#0b0d14','--panel':'rgba(255,255,255,0.025)','--panel2':'rgba(255,255,255,0.04)','--accent':'#5cd9ff','--accent2':'#6ea8ff','--glow':'rgba(92,217,255,0.20)','--line':'rgba(255,255,255,0.09)','--text':'#eef2f8','--muted':'#878fa1'},
+    violet: {'--bg':'#09070f','--bg2':'#0e0b18','--panel':'rgba(255,255,255,0.025)','--panel2':'rgba(255,255,255,0.045)','--accent':'#b58bff','--accent2':'#ff7ab8','--glow':'rgba(181,139,255,0.20)','--line':'rgba(255,255,255,0.09)','--text':'#f1ecfa','--muted':'#938aa8'},
+    green:  {'--bg':'#06100c','--bg2':'#0a1612','--panel':'rgba(255,255,255,0.025)','--panel2':'rgba(255,255,255,0.04)','--accent':'#46e6a0','--accent2':'#5cd9ff','--glow':'rgba(70,230,160,0.18)','--line':'rgba(255,255,255,0.09)','--text':'#e9f6ef','--muted':'#7fa093'}
+  };
+
+  iconDefs = {
+    building: [['path',{d:'M5 21V4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v17'}],['path',{d:'M14 21V9h4a1 1 0 0 1 1 1v11'}],['path',{d:'M3 21h18'}],['path',{d:'M8 7h2'}],['path',{d:'M8 11h2'}],['path',{d:'M8 15h2'}]],
+    badge: [['circle',{cx:12,cy:12,r:9}],['path',{d:'m8.5 12 2.5 2.5 4.5-4.5'}]],
+    hexagon: [['path',{d:'M12 2.6 20 7v10l-8 4.4L4 17V7l8-4.4Z'}],['path',{d:'M12 8.5v7'}],['path',{d:'M8.7 10.2v3.6'}],['path',{d:'M15.3 10.2v3.6'}]],
+    shield: [['path',{d:'M12 3 5 6v5c0 4.2 3 7 7 8 4-1 7-3.8 7-8V6l-7-3Z'}],['path',{d:'m9 12 2 2 4-4'}]],
+    paint: [['rect',{x:3,y:3,width:13,height:6,rx:1}],['path',{d:'M16 6h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-7a1 1 0 0 0-1 1v2'}],['rect',{x:9.5,y:15,width:4,height:6,rx:1}]],
+    card: [['rect',{x:2,y:5,width:20,height:14,rx:2}],['path',{d:'M2 10h20'}],['path',{d:'M6 15h3'}]],
+    file: [['path',{d:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z'}],['path',{d:'M14 3v5h5'}],['path',{d:'M9 13h6'}],['path',{d:'M9 17h6'}]],
+    home: [['path',{d:'m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'}],['path',{d:'M9 21V12h6v9'}]],
+    layers: [['path',{d:'M12 2 2 7l10 5 10-5-10-5Z'}],['path',{d:'m2 12 10 5 10-5'}],['path',{d:'m2 17 10 5 10-5'}]],
+    lock: [['rect',{x:4,y:11,width:16,height:9,rx:2}],['path',{d:'M8 11V7a4 4 0 0 1 8 0v4'}]],
+    zap: [['path',{d:'M13 2 4 14h7l-1 8 9-12h-7l1-8Z'}]],
+    wallet: [['path',{d:'M3 7a2 2 0 0 1 2-2h12v3'}],['path',{d:'M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2Z'}],['circle',{cx:16.5,cy:12.5,r:1.1}]],
+    globe: [['circle',{cx:12,cy:12,r:9}],['path',{d:'M3 12h18'}],['path',{d:'M12 3a13 13 0 0 1 0 18 13 13 0 0 1 0-18Z'}]],
+    grid: [['rect',{x:3,y:3,width:7,height:7,rx:1.4}],['rect',{x:14,y:3,width:7,height:7,rx:1.4}],['rect',{x:3,y:14,width:7,height:7,rx:1.4}],['rect',{x:14,y:14,width:7,height:7,rx:1.4}]],
+    arrow: [['path',{d:'M5 12h14'}],['path',{d:'m13 6 6 6-6 6'}]],
+    check: [['path',{d:'m5 13 4 4 10-11'}]],
+    chain: [['path',{d:'M9 15 15 9'}],['path',{d:'M11 6.5 12.5 5a3.5 3.5 0 0 1 5 5l-1.5 1.5'}],['path',{d:'M13 17.5 11.5 19a3.5 3.5 0 0 1-5-5L8 12.5'}]]
+  };
+
+  icon(name, size) {
+    const s = size || 22;
+    const kids = (this.iconDefs[name] || []).map((d, i) =>
+      React.createElement(d[0], Object.assign({ key: i }, d[1])));
+    return React.createElement('svg', {
+      width: s, height: s, viewBox: '0 0 24 24', fill: 'none',
+      stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round'
+    }, kids);
+  }
+
+  componentDidMount() {
+    this._raf = null;
+    this.onMove = (e) => {
+      const w = window.innerWidth, h = window.innerHeight;
+      const mx = (e.clientX / w - 0.5) * 2, my = (e.clientY / h - 0.5) * 2;
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = null;
+        const el = this.heroRef && this.heroRef.current;
+        if (el) { el.style.setProperty('--mx', mx.toFixed(3)); el.style.setProperty('--my', my.toFixed(3)); }
+      });
+    };
+    window.addEventListener('mousemove', this.onMove);
+    this.applyTheme(this.state.theme);
+    [600, 1500, 3000, 6000].forEach(t => setTimeout(() => this.hideSplineLogo(), t));
+  }
+  componentWillUnmount() { window.removeEventListener('mousemove', this.onMove); }
+  hideSplineLogo() {
+    try {
+      const sv = document.querySelector('spline-viewer');
+      if (!sv || !sv.shadowRoot) return;
+      sv.shadowRoot.querySelectorAll('#logo, a[href*="spline.design"], [id*="watermark"], [class*="watermark"], [class*="logo"]').forEach(e => { e.style.display = 'none'; e.style.opacity = '0'; e.style.pointerEvents = 'none'; });
+    } catch (e) {}
+  }
+
+  applyTheme(name) {
+    const t = this.themes[name]; const el = this.rootRef && this.rootRef.current;
+    if (t && el) Object.keys(t).forEach(k => el.style.setProperty(k, t[k]));
+  }
+  setTheme(name) { this.setState({ theme: name }); this.applyTheme(name); }
+  go(page) { this.setState({ page }); try { window.scrollTo(0, 0); } catch(e){} }
+  connectWallet() {
+    if (this.state.wallet) this.setState({ wallet: null });
+    else this.setState({ wallet: '0x6f2A' + Math.floor(Math.random()*9000+1000) + '…3a21' });
+  }
+  payFor(name) { this.setState({ page: 'pay', step: 1, service: name }); try{window.scrollTo(0,0);}catch(e){} }
+  selectService(name) { this.setState({ service: name, step: 1 }); }
+  setAmount(v) { this.setState({ amount: v.replace(/[^0-9.]/g, '') }); }
+  setMethod(m) { this.setState({ method: m }); }
+  amountNum() { return parseFloat(this.state.amount) || 0; }
+  fee() { return this.amountNum() * 0.012; }
+  total() { return this.amountNum() + this.fee(); }
+  fmt(n) { return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  canNext() {
+    const s = this.state;
+    if (s.step === 0) return !!s.service;
+    if (s.step === 1) return this.amountNum() > 0;
+    return true;
+  }
+  next() {
+    if (!this.canNext()) return;
+    if (this.state.step === 3) {
+      const hash = '0x' + Array.from({length:8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '…' + Array.from({length:4}, () => Math.floor(Math.random()*16).toString(16)).join('');
+      this.setState({ step: 4, txHash: hash });
+    } else this.setState({ step: this.state.step + 1 });
+  }
+  back() { if (this.state.step > 0 && this.state.step < 4) this.setState({ step: this.state.step - 1 }); }
+  reset() { this.setState({ step: 0, service: null, amount: '', method: 'card', email: '', txHash: '' }); }
+
+  renderVals() {
+    const s = this.state;
+    const pages = [{key:'home',label:'Home'},{key:'services',label:'Services'},{key:'pay',label:'Pay'},{key:'about',label:'About'}];
+    const navItems = pages.map(p => ({
+      label: p.label, active: s.page === p.key,
+      color: s.page === p.key ? 'var(--text)' : 'var(--muted)',
+      onClick: () => this.go(p.key)
+    }));
+    const themeChips = [
+      { name:'cyan', swatch:'#5cd9ff', key:'cyan' },
+      { name:'violet', swatch:'#b58bff', key:'violet' },
+      { name:'green', swatch:'#46e6a0', key:'green' }
+    ].map(t => ({ name:t.name, swatch:t.swatch, ring: s.theme===t.key?'#ffffff':'transparent', onClick:()=>this.setTheme(t.key) }));
+
+    const services = [
+      { ic:'building', tag:'DEVELOP', title:'Property Development', desc:'Fund ground-up builds with tokenized capital. Investors contribute, you draw down as you build.' },
+      { ic:'badge', tag:'ESCROW', title:'Construction Milestones', desc:'Milestone payments held in escrow and auto-released the moment each phase is verified complete.' },
+      { ic:'hexagon', tag:'NFT', title:'Digital Goods & NFT Deeds', desc:'Mint property deeds, plans and warranties as on-chain assets that transfer in a single click.' },
+      { ic:'shield', tag:'WEB3', title:'Web3 Escrow', desc:'Trustless escrow for deals of any size — no bank letter, no 30-day hold, no chargebacks.' },
+      { ic:'paint', tag:'SERVICES', title:'Renovation & Painting', desc:'Collect payment for repaints, remodels, repairs and home additions — card or crypto, your choice.' },
+      { ic:'card', tag:'ON-RAMP', title:'Stripe Crypto On-Ramp', desc:'Clients pay with a normal card; funds arrive as USDC or ETH in your escrow. Zero crypto know-how needed.' }
+    ].map(x => ({ icon: this.icon(x.ic, 24), tag:x.tag, title:x.title, desc:x.desc, onClick: () => this.payFor(x.title) }));
+
+    const processSteps = [
+      { n:'1', ic:'file', title:'Quote the job', desc:'Pick a service and set the amount — from a $400 paint job to a $4M draw.' },
+      { n:'2', ic:'card', title:'Client pays', desc:'Card via Stripe on-ramp or direct from a wallet. Both land on-chain.' },
+      { n:'3', ic:'lock', title:'Held in escrow', desc:'Funds sit in an audited contract until the milestone is verified.' },
+      { n:'4', ic:'zap', title:'Instant release', desc:'Work approved? Funds settle to you in seconds — no waiting on banks.' }
+    ].map(p => ({ n:p.n, title:p.title, desc:p.desc, icon: this.icon(p.ic, 21) }));
+
+    const payNames = ['Home Renovation','Interior & Exterior Painting','Construction Milestone Deposit','Web3 Escrow Funding','NFT Property Deed Minting','Custom Build / Other'];
+    const payIcons = ['home','paint','layers','shield','hexagon','grid'];
+    const payServices = payNames.map((name, i) => ({
+      name, icon: this.icon(payIcons[i], 19),
+      onClick: () => this.selectService(name),
+      border: s.service === name ? 'var(--accent)' : 'var(--line)',
+      bg: s.service === name ? 'var(--panel2)' : 'var(--bg2)'
+    }));
+
+    const quickAmounts = [500, 2500, 10000, 50000].map(v => ({
+      label: '$' + v.toLocaleString(), onClick: () => this.setState({ amount: String(v) })
+    }));
+
+    const methods = [
+      { key:'card', ic:'card', title:'Card via Stripe On-Ramp', desc:'Pay with Visa, Mastercard or Apple Pay. Auto-converted to USDC in escrow.' },
+      { key:'crypto', ic:'wallet', title:'Crypto from your wallet', desc:'Send ETH or USDC directly from a connected wallet on Base.' }
+    ].map(m => ({
+      icon: this.icon(m.ic, 20), title:m.title, desc:m.desc,
+      border: s.method===m.key?'var(--accent)':'var(--line)',
+      bg: s.method===m.key?'var(--panel2)':'var(--bg2)',
+      dotRing: s.method===m.key?'var(--accent)':'var(--line)',
+      dotFill: s.method===m.key?'var(--accent)':'transparent',
+      onClick: () => this.setMethod(m.key)
+    }));
+
+    const stepNames = ['Service','Amount','Method','Confirm'];
+    const steps = stepNames.map((name, i) => {
+      const done = s.step > i, active = s.step === i;
+      return {
+        name, mark: done ? '✓' : String(i + 1),
+        ring: (done||active) ? 'var(--accent)' : 'var(--line)',
+        fg: active ? '#06070d' : (done ? 'var(--accent)' : 'var(--muted)'),
+        bg: active ? 'var(--accent)' : 'transparent',
+        label: (done||active) ? 'var(--text)' : 'var(--muted)',
+        line: i < stepNames.length - 1,
+        lineColor: s.step > i ? 'var(--accent)' : 'var(--line)'
+      };
+    });
+
+    const total = this.total();
+    const ethEst = (total / 3450).toFixed(4);
+    const summary = [
+      { k:'Service', v: s.service || '—', color:'var(--text)' },
+      { k:'Amount', v: this.fmt(this.amountNum()), color:'var(--text)' },
+      { k:'Network + processing (1.2%)', v: this.fmt(this.fee()), color:'var(--muted)' },
+      { k:'Method', v: s.method==='card'?'Card · Stripe on-ramp':'Crypto · wallet', color:'var(--text)' },
+      { k:'Settles as', v: ethEst + ' ETH (USDC)', color:'var(--accent2)' }
+    ];
+    const R = (typeof window !== 'undefined' && window.__resources) || {};
+    const projData = [
+      { img: R.p1 || 'assets/projects/p1.png', title:'Kitchen Remodel', city:'Austin, TX', meta:'Full gut renovation · 6 wks', price:'$52,000' },
+      { img: R.p2 || 'assets/projects/p2.png', title:'Master Bathroom', city:'Denver, CO', meta:'Spa-grade remodel · 4 wks', price:'$34,000' },
+      { img: R.p3 || 'assets/projects/p3.png', title:'Exterior Repaint', city:'Phoenix, AZ', meta:'Facade restoration · 2 wks', price:'$11,000' },
+      { img: R.p4 || 'assets/projects/p4.png', title:'Home Addition', city:'Seattle, WA', meta:'320 sq ft extension · 10 wks', price:'$98,000' },
+      { img: R.p5 || 'assets/projects/p5.png', title:'Living Room', city:'Nashville, TN', meta:'Open-concept redesign · 5 wks', price:'$41,000' },
+      { img: R.p6 || 'assets/projects/p6.png', title:'Office Buildout', city:'Miami, FL', meta:'Commercial fit-out · 8 wks', price:'$140,000' }
+    ];
+    const act = this.state.activeProject;
+    const fanCards = projData.map((p, i) => {
+      const off = i - act, ao = Math.abs(off);
+      const tx = off * 80, ty = off === 0 ? -16 : ao * 26, rot = off * 6;
+      const sc = Math.max(0.82, 1 - ao * 0.07);
+      return {
+        img: p.img, title: p.title, city: p.city,
+        transform: 'translateX(' + tx + 'px) translateY(' + ty + 'px) rotate(' + rot + 'deg) scale(' + sc.toFixed(3) + ')',
+        z: String(20 - ao),
+        opacity: ao > 2 ? '0' : (1 - ao * 0.22).toFixed(2),
+        onClick: () => this.setState({ activeProject: i })
+      };
+    });
+    const ap = projData[act];
+    const enabled = this.canNext();
+
+    return {
+      rootRef: this.rootRef || (this.rootRef = React.createRef()),
+      heroRef: this.heroRef || (this.heroRef = React.createRef()),
+      isHome: s.page==='home', isServices: s.page==='services', isPay: s.page==='pay', isAbout: s.page==='about',
+      goHome: () => this.go('home'), goServices: () => this.go('services'), goPay: () => this.go('pay'),
+      navItems, themeChips, services, processSteps,
+      fanCards, activeTitle: ap.title, activeMeta: ap.meta, activeCity: ap.city, activePrice: ap.price,
+      chevR: this.icon('arrow', 18),
+      prevProject: () => this.setState({ activeProject: (act + projData.length - 1) % projData.length }),
+      nextProject: () => this.setState({ activeProject: (act + 1) % projData.length }),
+      walletLabel: s.wallet ? s.wallet : 'Connect wallet',
+      walletDot: s.wallet ? '#46e6a0' : 'var(--muted)',
+      connectWallet: () => this.connectWallet(),
+      glassFilter: React.createElement('svg',{width:0,height:0,style:{position:'absolute'},'aria-hidden':true},React.createElement('defs',null,React.createElement('filter',{id:'container-glass',x:'0%',y:'0%',width:'100%',height:'100%',colorInterpolationFilters:'sRGB'},React.createElement('feTurbulence',{type:'fractalNoise',baseFrequency:'0.05 0.05',numOctaves:1,seed:1,result:'turbulence'}),React.createElement('feGaussianBlur',{in:'turbulence',stdDeviation:2,result:'blurredNoise'}),React.createElement('feDisplacementMap',{in:'SourceGraphic',in2:'blurredNoise',scale:70,xChannelSelector:'R',yChannelSelector:'B',result:'displaced'}),React.createElement('feGaussianBlur',{in:'displaced',stdDeviation:4,result:'finalBlur'}),React.createElement('feComposite',{in:'finalBlur',in2:'finalBlur',operator:'over'})))),
+      arrowDark: this.icon('arrow', 17),
+      arrowAccent: this.icon('arrow', 15),
+      lockIcon: this.icon('lock', 14),
+      chainIcon: this.icon('chain', 14),
+      checkIcon: this.icon('check', 30),
+      heroStats: [
+        { v:'$120M+', k:'SETTLED ON-CHAIN' },
+        { v:'0.0%', k:'CHARGEBACK RISK' },
+        { v:'24/7', k:'INSTANT SETTLEMENT' }
+      ],
+      steps, payServices, quickAmounts, methods, summary,
+      selectedService: s.service || 'your project',
+      amount: s.amount, onAmount: (e) => this.setAmount(e.target.value),
+      email: s.email, onEmail: (e) => this.setState({ email: e.target.value }),
+      ethEst, totalFmt: this.fmt(total),
+      isStep0: s.step===0, isStep1: s.step===1, isStep2: s.step===2, isStep3: s.step===3, isDone: s.step===4,
+      showNav: s.step <= 3,
+      next: () => this.next(), back: () => this.back(), reset: () => this.reset(),
+      backColor: s.step===0?'var(--muted)':'var(--text)',
+      backCursor: s.step===0?'not-allowed':'pointer',
+      nextLabel: s.step===3?'Confirm & pay':'Continue',
+      nextCursor: enabled?'pointer':'not-allowed',
+      nextOpacity: enabled?'1':'0.4',
+      txHash: s.txHash,
+      emailSuffix: s.email ? (' to ' + s.email) : '',
+      stats: [
+        { v:'$120M+', k:'Settled on-chain' },
+        { v:'1,400+', k:'Jobs funded' },
+        { v:'11 sec', k:'Avg. settlement' },
+        { v:'0', k:'Chargebacks' }
+      ],
+      values: [
+        { ic:'zap', title:'Instant, not 60 days', desc:'Bank rails take weeks. Escrow releases settle the moment work is approved.' },
+        { ic:'shield', title:'Trustless by design', desc:'Funds live in an audited contract — neither side can pull a fast one.' },
+        { ic:'globe', title:'Card or crypto', desc:'Clients who have never touched a wallet can still pay you in crypto.' }
+      ].map(v => ({ icon: this.icon(v.ic, 21), title:v.title, desc:v.desc }))
+    };
+  }
+}
+</script>
+</body>
+</html>

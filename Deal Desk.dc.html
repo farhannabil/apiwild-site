@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="ext-resource-dependency" content="assets/deployments/d1.png" data-resource-id="d1" />
+<meta name="ext-resource-dependency" content="assets/deployments/d2.png" data-resource-id="d2" />
+<meta name="ext-resource-dependency" content="assets/deployments/d3.png" data-resource-id="d3" />
+<meta name="ext-resource-dependency" content="assets/deployments/d4.png" data-resource-id="d4" />
+<meta name="ext-resource-dependency" content="assets/deployments/d5.png" data-resource-id="d5" />
+<meta name="ext-resource-dependency" content="assets/deployments/d6.png" data-resource-id="d6" />
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#06070e">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#06070e"/>
+    <g fill="none" stroke="#5cd9ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="470" y="300" width="260" height="200" rx="14" opacity="0.35"/>
+      <path d="M600 300 L600 500 M470 400 L730 400" opacity="0.25"/>
+      <circle cx="600" cy="400" r="46" fill="#06070e"/>
+      <rect x="584" y="396" width="32" height="26" rx="3"/>
+      <path d="M589 396 v-8 a11 11 0 0 1 22 0 v8"/>
+    </g>
+    <text x="600" y="600" text-anchor="middle" fill="#eaf0fa" font-family="monospace" font-size="46" letter-spacing="8">TEKINFINITY</text>
+    <text x="600" y="648" text-anchor="middle" fill="#7e879d" font-family="monospace" font-size="22" letter-spacing="6">NETWORK · SECURITY · OPS</text>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:#06070e;}
+  ::selection{background:rgba(92,217,255,0.25);color:#fff;}
+  @keyframes spotIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  @keyframes ringspin{to{transform:rotate(360deg);}}
+  @keyframes ringspinRev{to{transform:rotate(-360deg);}}
+  @keyframes corePulse{0%,100%{transform:scale(1);opacity:0.85;}50%{transform:scale(1.14);opacity:1;}}
+  @keyframes glowIn{from{opacity:0;transform:translateY(36px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes auroraDrift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-3%,2%) scale(1.08);}}
+  @keyframes menuIn{from{opacity:0;}to{opacity:1;}}
+  spline-viewer::part(logo){display:none;}
+  ::-webkit-scrollbar{width:9px;}
+  ::-webkit-scrollbar-track{background:#06070e;}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:10px;}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="--bg:#06070e;--bg2:#0a0c16;--panel:rgba(255,255,255,0.022);--panel2:rgba(255,255,255,0.04);--card1:rgba(20,24,38,0.9);--card2:rgba(9,11,19,0.94);--edge:rgba(92,217,255,0.28);--accent:#5cd9ff;--accent2:#7b8cff;--glow:rgba(92,217,255,0.18);--line:rgba(255,255,255,0.08);--text:#eaf0fa;--muted:#7e879d;font-family:'Space Grotesk',sans-serif;color:var(--text);background:var(--bg);min-height:100vh;position:relative;overflow-x:hidden;">
+
+  {{ glassFilter }}
+  <!-- aurora bg -->
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;">
+    <div style="position:absolute;top:-20%;right:-10%;width:70vw;height:70vw;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 62%);filter:blur(40px);animation:auroraDrift 22s ease-in-out infinite;"></div>
+    <div style="position:absolute;bottom:-30%;left:-15%;width:65vw;height:65vw;border-radius:50%;background:radial-gradient(circle,rgba(123,140,255,0.12),transparent 62%);filter:blur(50px);animation:auroraDrift 28s ease-in-out infinite reverse;"></div>
+  </div>
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.45;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:88px 88px;mask:radial-gradient(1000px 680px at 50% 0%,#000,transparent 80%);-webkit-mask:radial-gradient(1000px 680px at 50% 0%,#000,transparent 80%);"></div>
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:55;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px clamp(16px,4vw,56px);backdrop-filter:blur(16px);background:linear-gradient(180deg,rgba(6,7,14,0.9),rgba(6,7,14,0.45));border-bottom:1px solid var(--line);">
+    <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:12px;background:none;border:none;cursor:pointer;padding:0;">
+      <div style="position:relative;width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--edge);background:linear-gradient(160deg,var(--panel2),transparent);clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">
+        <span style="font-weight:700;font-size:15px;letter-spacing:0.5px;color:var(--accent);">TI</span>
+      </div>
+      <div style="text-align:left;line-height:1;">
+        <div style="font-weight:700;font-size:14.5px;letter-spacing:1.5px;color:var(--text);">TEKINFINITY</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--muted);margin-top:4px;">NETWORK · SECURITY · OPS</div>
+      </div>
+    </button>
+
+    <sc-if value="{{ navDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;gap:4px;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+        <button onClick="{{ item.onClick }}" style="position:relative;background:none;border:none;cursor:pointer;font-size:13px;font-weight:500;letter-spacing:0.3px;color:{{ item.color }};padding:9px 14px;" style-hover="color:var(--text);">
+          {{ item.label }}
+          <sc-if value="{{ item.active }}" hint-placeholder-val="{{ true }}">
+            <span style="position:absolute;left:14px;right:14px;bottom:1px;height:1.5px;background:var(--accent);box-shadow:0 0 8px var(--glow);"></span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:6px;padding:5px;border:1px solid var(--line);border-radius:30px;">
+        <sc-for list="{{ themeChips }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.onClick }}" title="{{ t.name }}" style="width:15px;height:15px;border-radius:50%;cursor:pointer;background:{{ t.swatch }};border:1.5px solid {{ t.ring }};padding:0;"></button>
+        </sc-for>
+      </div>
+      <button onClick="{{ connectWallet }}" style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:10px 15px;cursor:pointer;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);" style-hover="border-color:var(--accent);">
+        <span style="width:7px;height:7px;border-radius:50%;background:{{ walletDot }};box-shadow:0 0 7px {{ walletDot }};"></span>
+        {{ walletLabel }}
+      </button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ navMobile }}" hint-placeholder-val="{{ true }}">
+    <button onClick="{{ toggleMenu }}" aria-label="Menu" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">{{ menuIcon }}</button>
+    </sc-if>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:60;background:rgba(6,7,14,0.97);backdrop-filter:blur(18px);display:flex;flex-direction:column;padding:18px clamp(16px,5vw,40px) 40px;animation:menuIn 0.25s ease both;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:48px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);">TEKINFINITY · NAV</div>
+      <button onClick="{{ closeMenu }}" aria-label="Close" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">{{ closeIcon }}</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+        <button onClick="{{ item.onClick }}" style="display:flex;align-items:baseline;gap:16px;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);cursor:pointer;padding:22px 4px;color:{{ item.color }};">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);">{{ item.idx }}</span>
+          <span style="font-size:30px;font-weight:600;letter-spacing:-0.5px;">{{ item.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:32px;">
+      <div style="display:flex;align-items:center;gap:8px;padding:6px;border:1px solid var(--line);border-radius:30px;">
+        <sc-for list="{{ themeChips }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.onClick }}" title="{{ t.name }}" style="width:20px;height:20px;border-radius:50%;cursor:pointer;background:{{ t.swatch }};border:2px solid {{ t.ring }};padding:0;"></button>
+        </sc-for>
+      </div>
+      <button onClick="{{ connectWallet }}" style="display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:14px 20px;cursor:pointer;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">
+        <span style="width:8px;height:8px;border-radius:50%;background:{{ walletDot }};box-shadow:0 0 7px {{ walletDot }};"></span>
+        {{ walletLabel }}
+      </button>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;">
+    <section ref="{{ heroRef }}" style="--mx:0;--my:0;position:relative;min-height:92vh;display:flex;align-items:center;padding:clamp(96px,13vh,124px) clamp(16px,4vw,56px) 40px;overflow:hidden;">
+      <div style="position:absolute;top:-22%;left:-10%;width:64%;height:150%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,255,255,0.1),rgba(123,140,255,0.05),transparent 72%);filter:blur(34px);transform:translate(calc(var(--mx)*20px),calc(var(--my)*14px));animation:spotIn 2.4s ease forwards;"></div>
+
+      <div style="position:relative;z-index:2;display:flex;align-items:center;gap:clamp(24px,4vw,60px);max-width:1280px;margin:0 auto;width:100%;flex-wrap:wrap;">
+        <!-- left -->
+        <div style="flex:1 1 460px;min-width:min(100%,300px);transform:translate(calc(var(--mx)*-5px),calc(var(--my)*-4px));">
+          <div style="display:flex;align-items:center;gap:11px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--muted);margin-bottom:24px;">
+            <span style="display:inline-flex;align-items:center;gap:7px;color:var(--accent);"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--glow);animation:blink 1.8s infinite;"></span>NETWORK&nbsp;OPS&nbsp;CENTRE</span>
+            <span style="width:22px;height:1px;background:var(--line);"></span>
+            <span>GTA + BEYOND</span>
+          </div>
+          <h1 style="font-weight:700;font-size:clamp(38px,6vw,72px);line-height:1.0;margin:0;letter-spacing:-2px;">
+            From cable to<br>firewall. <span style="position:relative;color:var(--accent);">One team.<span style="position:absolute;left:0;right:0;bottom:-6px;height:2px;background:linear-gradient(90deg,var(--accent),transparent);"></span></span>
+          </h1>
+          <p style="font-size:clamp(15px,1.4vw,17px);line-height:1.7;color:var(--muted);max-width:480px;margin:24px 0 34px;">
+            We design, build, protect and manage network infrastructure for facilities that can't afford downtime — structured cabling, data centre, cyber defence and 24/7 managed operations, from one accountable team across the GTA.
+          </p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <button onClick="{{ goPay }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.16);padding:16px 26px;cursor:pointer;clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);transition:transform 0.3s ease;" style-hover="transform:translateY(-2px);"><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;pointer-events:none;box-shadow:inset 2px 2px 0.5px -2px rgba(255,255,255,0.7),inset -2px -2px 0.5px -2px rgba(255,255,255,0.7),inset 0 0 8px 4px rgba(255,255,255,0.04);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:9px;">Get a consultation {{ arrowDark }}</span></button>
+            <button onClick="{{ goServices }}" style="font-size:14px;font-weight:500;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:16px 24px;cursor:pointer;clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);" style-hover="border-color:var(--accent);">Explore services</button>
+          </div>
+
+          <!-- instrument readout -->
+          <div style="position:relative;margin-top:44px;max-width:520px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);background:linear-gradient(135deg,var(--edge),var(--line) 50%,var(--edge));padding:1px;">
+            <div style="display:flex;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);background:linear-gradient(160deg,var(--card1),var(--card2));">
+              <sc-for list="{{ heroStats }}" as="h" hint-placeholder-count="3">
+                <div style="flex:1;padding:18px 16px;border-right:1px solid var(--line);">
+                  <div style="font-size:23px;font-weight:700;letter-spacing:-0.5px;color:var(--text);">{{ h.v }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.6px;color:var(--muted);margin-top:6px;">{{ h.k }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <!-- right: HUD frame w/ 3D core -->
+        <div style="flex:1 1 400px;min-width:min(100%,300px);position:relative;clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);background:linear-gradient(135deg,var(--edge),var(--line) 45%,var(--edge));padding:1px;">
+          <div style="position:relative;height:clamp(340px,50vh,520px);clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);overflow:hidden;background:radial-gradient(120% 100% at 50% 0%,rgba(92,217,255,0.07),transparent 60%),#06070c;">
+            <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;">
+              <svg viewBox="0 0 240 240" width="80%" style="opacity:0.4;animation:ringspin 34s linear infinite;"><ellipse cx="120" cy="120" rx="106" ry="40" fill="none" stroke="var(--accent)" stroke-width="0.7"/></svg>
+            </div>
+            <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;">
+              <svg viewBox="0 0 240 240" width="64%" style="opacity:0.35;animation:ringspinRev 26s linear infinite;"><ellipse cx="120" cy="120" rx="40" ry="106" fill="none" stroke="var(--accent2)" stroke-width="0.7"/></svg>
+            </div>
+            <spline-viewer url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" style="width:100%;height:100%;position:relative;z-index:1;"></spline-viewer>
+            <!-- HUD overlays -->
+            <div style="position:absolute;top:14px;left:14px;z-index:2;display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);background:rgba(6,7,14,0.55);backdrop-filter:blur(8px);clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);">
+              <span style="width:6px;height:6px;border-radius:50%;background:#46e6a0;box-shadow:0 0 7px #46e6a0;animation:blink 1.8s infinite;"></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);">NOC · ONLINE</span>
+            </div>
+            <div style="position:absolute;bottom:14px;left:14px;right:14px;z-index:2;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.5px;color:var(--muted);">
+              <span>UPTIME 99.99%</span><span style="color:var(--accent);">GTA-CORE-01</span>
+            </div>
+            <span style="position:absolute;top:12px;right:12px;width:12px;height:12px;border-top:1.5px solid var(--accent);border-right:1.5px solid var(--accent);z-index:2;"></span>
+            <span style="position:absolute;bottom:12px;left:12px;width:12px;height:12px;border-bottom:1.5px solid var(--accent);border-left:1.5px solid var(--accent);z-index:2;"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA TICKER -->
+    <div style="position:relative;z-index:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,0.014);overflow:hidden;padding:11px 0;">
+      <div style="display:flex;width:max-content;gap:0;animation:ticker 38s linear infinite;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.5px;color:var(--muted);">
+        <div style="display:flex;gap:0;">{{ tickerA }}</div>
+        <div style="display:flex;gap:0;" aria-hidden="true">{{ tickerB }}</div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section style="position:relative;z-index:1;padding:84px clamp(16px,4vw,56px);max-width:1200px;margin:0 auto;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:18px;margin-bottom:42px;">
+        <div>
+          <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:16px;"><span style="width:18px;height:1px;background:var(--accent);"></span>01 / LIFECYCLE</div>
+          <h2 style="font-weight:700;font-size:clamp(26px,3.4vw,42px);margin:0;max-width:640px;line-height:1.1;letter-spacing:-1.2px;">Assess. Build.<br>Protect. Manage.</h2>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);text-align:right;line-height:1.7;">LIFECYCLE FRAMEWORK<br>ASSESS → BUILD → PROTECT → MANAGE</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;">
+        <sc-for list="{{ processSteps }}" as="p" hint-placeholder-count="4">
+          <div style="position:relative;clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);background:linear-gradient(135deg,var(--edge),var(--line) 50%,transparent);padding:1px;transition:transform 0.25s ease;" style-hover="transform:translateY(-4px);">
+            <div style="position:relative;clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);background:linear-gradient(160deg,var(--card1),var(--card2));padding:26px 22px;height:100%;">
+              <span style="position:absolute;top:10px;right:10px;width:11px;height:11px;border-top:1.5px solid var(--edge);border-right:1.5px solid var(--edge);"></span>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+                <div style="width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">{{ p.icon }}</div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:rgba(255,255,255,0.08);">0{{ p.n }}</span>
+              </div>
+              <div style="font-size:16px;font-weight:600;margin-bottom:8px;letter-spacing:-0.2px;">{{ p.title }}</div>
+              <div style="font-size:12.5px;line-height:1.6;color:var(--muted);">{{ p.desc }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- PROJECTS · GLOW + CARD FAN -->
+    <section style="position:relative;overflow:hidden;background:#040409;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:82px clamp(16px,4vw,56px) 100px;">
+      <div style="position:absolute;top:0;left:0;right:0;height:600px;pointer-events:none;animation:glowIn 2s cubic-bezier(0.16,1,0.3,1) both;">
+        <div style="position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:min(1100px,150%);height:380px;border-radius:50%;background:radial-gradient(ellipse 60% 72% at 50% 30%,#b66bff 0%,#6a3ae0 28%,rgba(48,22,150,0.6) 50%,transparent 72%);filter:blur(42px);opacity:1;"></div>
+        <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);width:min(700px,92%);height:160px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,0.82),rgba(214,196,255,0.22) 46%,transparent 68%);filter:blur(16px);"></div>
+        <div style="position:absolute;top:72px;left:50%;transform:translateX(-50%);width:min(520px,80%);height:4px;border-radius:50%;background:#ffffff;box-shadow:0 0 24px 6px rgba(255,255,255,0.6),0 2px 50px 14px #A558FB;"></div>
+      </div>
+
+      <div style="position:relative;z-index:2;max-width:1100px;margin:0 auto;text-align:center;">
+        <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:#c8a8ff;margin-bottom:16px;"><span style="width:18px;height:1px;background:#c8a8ff;"></span>02 / DEPLOYMENTS</div>
+        <h2 style="font-weight:700;font-size:clamp(28px,3.6vw,46px);margin:0 0 14px;letter-spacing:-1.2px;">From blueprint to backbone.</h2>
+        <p style="color:var(--muted);font-size:15px;line-height:1.6;max-width:520px;margin:0 auto;">Live infrastructure Tekinfinity designed, built, secured and now manages across the Greater Toronto Area. {{ fanHint }}</p>
+
+        <div style="position:relative;height:{{ carHpx }};max-width:760px;margin:46px auto 0;">
+          <sc-for list="{{ fanCards }}" as="c" hint-placeholder-count="0">
+            <div onClick="{{ c.onClick }}" style="position:absolute;left:50%;top:24px;width:{{ cardWpx }};height:{{ cardHpx }};margin-left:{{ cardNegHalf }};overflow:hidden;cursor:pointer;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);border:1px solid rgba(255,255,255,0.14);box-shadow:0 30px 60px rgba(0,0,0,0.55);transition:transform 0.55s cubic-bezier(0.16,1,0.3,1),opacity 0.4s ease;transform:{{ c.transform }};z-index:{{ c.z }};opacity:{{ c.opacity }};">
+              {{ c.imgEl }}
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,4,9,0.92),rgba(4,4,9,0.1) 52%,transparent);"></div>
+              <span style="position:absolute;top:11px;right:11px;width:11px;height:11px;border-top:1.5px solid var(--accent);border-right:1.5px solid var(--accent);"></span>
+              <div style="position:absolute;left:16px;right:16px;bottom:14px;text-align:left;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);margin-bottom:5px;">{{ c.idx }}</div>
+                <div style="font-size:13.5px;font-weight:600;color:#fff;letter-spacing:-0.2px;">{{ c.title }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(255,255,255,0.62);margin-top:4px;">{{ c.city }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:20px;margin-top:8px;">
+          <button onClick="{{ prevProject }}" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);" style-hover="border-color:#c8a8ff;"><span style="display:inline-flex;transform:scaleX(-1);">{{ chevR }}</span></button>
+          <div style="min-width:230px;">
+            <div style="font-size:19px;font-weight:700;letter-spacing:-0.4px;">{{ activeTitle }}</div>
+            <div style="color:var(--muted);font-size:12.5px;margin-top:4px;">{{ activeMeta }} · {{ activeCity }}</div>
+          </div>
+          <button onClick="{{ nextProject }}" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);" style-hover="border-color:#c8a8ff;">{{ chevR }}</button>
+        </div>
+
+        <div style="display:inline-flex;align-items:center;gap:9px;margin-top:22px;padding:8px 15px;border:1px solid var(--line);background:rgba(255,255,255,0.03);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">
+          <span style="width:6px;height:6px;border-radius:50%;background:#46e6a0;box-shadow:0 0 7px #46e6a0;"></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">{{ activePrice }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="position:relative;z-index:1;padding:84px clamp(16px,4vw,56px);max-width:1200px;margin:0 auto;">
+      <div style="position:relative;clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);background:linear-gradient(135deg,var(--edge),var(--line) 50%,var(--edge));padding:1px;">
+        <div style="position:relative;clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);background:linear-gradient(120deg,rgba(92,217,255,0.07),transparent 55%),linear-gradient(160deg,var(--card1),var(--card2));padding:clamp(30px,5vw,58px);">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;">
+            <div>
+              <h3 style="font-weight:700;font-size:clamp(22px,2.8vw,34px);margin:0 0 10px;letter-spacing:-0.8px;">Ready to build infrastructure that can't fail?</h3>
+              <p style="color:var(--muted);margin:0;max-width:520px;line-height:1.6;font-size:15px;">From a single-floor cabling job to a multi-site campus network — one team designs it, secures it and stands behind it, 24/7.</p>
+            </div>
+            <button onClick="{{ goPay }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.16);padding:16px 26px;cursor:pointer;white-space:nowrap;clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);transition:transform 0.3s ease;" style-hover="transform:translateY(-2px);"><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;pointer-events:none;box-shadow:inset 2px 2px 0.5px -2px rgba(255,255,255,0.7),inset -2px -2px 0.5px -2px rgba(255,255,255,0.7);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:9px;">Get a consultation {{ arrowDark }}</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ============ SERVICES ============ -->
+  <sc-if value="{{ isServices }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;padding:clamp(108px,15vh,128px) clamp(16px,4vw,56px) 96px;max-width:1200px;margin:0 auto;">
+    <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:16px;"><span style="width:18px;height:1px;background:var(--accent);"></span>S.01 / SERVICES</div>
+    <h1 style="font-weight:700;font-size:clamp(30px,4.6vw,56px);margin:0 0 16px;line-height:1.05;letter-spacing:-1.8px;">From cable to firewall,<br>engineered end to end.</h1>
+    <p style="color:var(--muted);font-size:16px;line-height:1.7;max-width:580px;margin:0 0 44px;">Six disciplines covering the full lifecycle of your network — design, build, protect and manage. One accountable team from structured cabling to zero-trust security.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;">
+      <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+        <div style="position:relative;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);background:linear-gradient(135deg,var(--edge),var(--line) 50%,transparent);padding:1px;transition:transform 0.22s ease;" style-hover="transform:translateY(-4px);">
+          <div style="position:relative;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);background:linear-gradient(160deg,var(--card1),var(--card2));padding:28px 24px;height:100%;">
+            <span style="position:absolute;top:11px;right:11px;width:12px;height:12px;border-top:1.5px solid var(--edge);border-right:1.5px solid var(--edge);"></span>
+            <span style="position:absolute;bottom:11px;left:11px;width:12px;height:12px;border-bottom:1.5px solid var(--edge);border-left:1.5px solid var(--edge);"></span>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+              <div style="width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);">{{ s.icon }}</div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--muted);border:1px solid var(--line);padding:5px 10px;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);">{{ s.tag }}</span>
+            </div>
+            <div style="font-size:18px;font-weight:600;margin-bottom:10px;letter-spacing:-0.3px;">{{ s.title }}</div>
+            <div style="font-size:13.5px;line-height:1.65;color:var(--muted);margin-bottom:18px;">{{ s.desc }}</div>
+            <button onClick="{{ s.onClick }}" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;">Request a quote {{ arrowAccent }}</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ PAY ============ -->
+  <sc-if value="{{ isPay }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;padding:clamp(104px,14vh,120px) clamp(16px,4vw,56px) 96px;max-width:840px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:34px;">
+      <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:14px;"><span style="width:18px;height:1px;background:var(--accent);"></span>REQUEST A CONSULTATION</div>
+      <h1 style="font-weight:700;font-size:clamp(28px,3.6vw,44px);margin:0;letter-spacing:-1px;">Get a quote</h1>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:0;margin-bottom:34px;max-width:540px;margin-left:auto;margin-right:auto;">
+      <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;flex:1;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
+            <div style="width:34px;height:34px;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid {{ st.ring }};color:{{ st.fg }};background:{{ st.bg }};clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);transition:all 0.3s;">{{ st.mark }}</div>
+            <span style="font-size:9.5px;letter-spacing:0.3px;color:{{ st.label }};white-space:nowrap;">{{ st.name }}</span>
+          </div>
+          <sc-if value="{{ st.line }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;height:1.5px;margin:0 6px 20px;background:{{ st.lineColor }};"></div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="position:relative;clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);background:linear-gradient(135deg,var(--edge),var(--line) 55%,var(--edge));padding:1px;">
+    <div style="position:relative;clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);background:linear-gradient(160deg,var(--card1),var(--card2));padding:clamp(22px,4vw,38px);">
+
+      <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px;">What do you need?</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:22px;">Select the service you're interested in.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;">
+          <sc-for list="{{ payServices }}" as="ps" hint-placeholder-count="6">
+            <button onClick="{{ ps.onClick }}" style="text-align:left;display:flex;align-items:center;gap:13px;padding:15px;border:1px solid {{ ps.border }};background:{{ ps.bg }};cursor:pointer;color:var(--text);clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);transition:all 0.18s;" style-hover="border-color:rgba(255,255,255,0.28);">
+              <span style="width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">{{ ps.icon }}</span>
+              <span style="font-size:13.5px;font-weight:500;line-height:1.3;">{{ ps.name }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px;">How big is the facility?</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:22px;">Scoping <span style="color:var(--accent);">{{ selectedService }}</span></div>
+        <div style="position:relative;margin-bottom:16px;">
+          <span style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--muted);">sq ft</span>
+          <input value="{{ amount }}" onInput="{{ onAmount }}" inputMode="decimal" placeholder="0" style="width:100%;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:34px;color:var(--text);background:var(--bg2);border:1px solid var(--line);padding:16px 78px 16px 20px;outline:none;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;">
+          <sc-for list="{{ quickAmounts }}" as="q" hint-placeholder-count="4">
+            <button onClick="{{ q.onClick }}" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:9px 14px;cursor:pointer;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);" style-hover="border-color:var(--accent);">{{ q.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:14px 18px;border:1px solid var(--line);background:var(--bg2);clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);">
+          <span style="color:var(--muted);font-size:13px;">Indicative timeline</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:var(--accent);">{{ timelineEst }}</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px;">How should we reach you?</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:22px;">Pick how you'd like the first conversation to happen.</div>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:22px;">
+          <sc-for list="{{ methods }}" as="m" hint-placeholder-count="2">
+            <button onClick="{{ m.onClick }}" style="text-align:left;display:flex;align-items:center;gap:15px;padding:18px;border:1px solid {{ m.border }};background:{{ m.bg }};cursor:pointer;color:var(--text);clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);">
+              <span style="width:44px;height:44px;flex-shrink:0;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">{{ m.icon }}</span>
+              <span style="flex:1;">
+                <span style="display:block;font-size:15px;font-weight:600;margin-bottom:3px;">{{ m.title }}</span>
+                <span style="display:block;font-size:12.5px;color:var(--muted);line-height:1.5;">{{ m.desc }}</span>
+              </span>
+              <span style="width:20px;height:20px;border-radius:50%;border:1.5px solid {{ m.dotRing }};display:grid;place-items:center;flex-shrink:0;"><span style="width:10px;height:10px;border-radius:50%;background:{{ m.dotFill }};"></span></span>
+            </button>
+          </sc-for>
+        </div>
+        <input value="{{ email }}" onInput="{{ onEmail }}" placeholder="Work email" style="width:100%;font-size:14.5px;color:var(--text);background:var(--bg2);border:1px solid var(--line);padding:14px 17px;outline:none;font-family:'Space Grotesk',sans-serif;clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);" />
+        <div style="display:flex;align-items:center;gap:9px;margin-top:16px;font-size:11.5px;color:var(--muted);">
+          <span style="color:var(--accent);display:grid;place-items:center;">{{ lockIcon }}</span> We reply within one business day. Your details are never shared or sold.
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:20px;letter-spacing:-0.3px;">Review your request</div>
+        <div style="border:1px solid var(--line);overflow:hidden;margin-bottom:20px;clip-path:polygon(13px 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%,0 13px);">
+          <sc-for list="{{ summary }}" as="r" hint-placeholder-count="5">
+            <div style="display:flex;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--bg2);">
+              <span style="color:var(--muted);font-size:13px;">{{ r.k }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ r.color }};">{{ r.v }}</span>
+            </div>
+          </sc-for>
+          <div style="display:flex;justify-content:space-between;padding:17px 18px;background:var(--panel2);">
+            <span style="font-size:16px;font-weight:600;">Est. timeline</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--accent);">{{ timelineEst }}</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--muted);">
+          <span style="color:var(--accent);display:grid;place-items:center;">{{ chainIcon }}</span> A Tekinfinity engineer will confirm scope and pricing <span style="font-family:'JetBrains Mono',monospace;color:var(--accent2);">within 1 business day</span>.
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isDone }}" hint-placeholder-val="{{ true }}">
+      <div style="text-align:center;padding:14px 0;">
+        <div style="width:72px;height:72px;margin:0 auto 20px;display:grid;place-items:center;border:1px solid var(--accent);color:var(--accent);box-shadow:0 0 36px var(--glow);background:var(--panel2);clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);">{{ checkIcon }}</div>
+        <div style="font-size:24px;font-weight:700;margin-bottom:10px;letter-spacing:-0.5px;">Request received</div>
+        <div style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:22px;max-width:420px;margin-left:auto;margin-right:auto;">Thanks — we've logged your consultation request for {{ selectedService }}. A Tekinfinity engineer will reach out{{ emailSuffix }} within one business day.</div>
+        <div style="display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);border:1px solid var(--line);padding:10px 16px;background:var(--bg2);margin-bottom:28px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">
+          <span style="width:6px;height:6px;border-radius:50%;background:#46e6a0;box-shadow:0 0 7px #46e6a0;"></span>
+          {{ txHash }}
+        </div>
+        <div>
+          <button onClick="{{ reset }}" style="font-size:13px;font-weight:500;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:13px 24px;cursor:pointer;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);" style-hover="border-color:var(--accent);">Send another request</button>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;justify-content:space-between;gap:14px;margin-top:30px;padding-top:24px;border-top:1px solid var(--line);">
+        <button onClick="{{ back }}" style="font-size:13px;font-weight:500;color:{{ backColor }};background:none;border:1px solid var(--line);padding:13px 22px;cursor:{{ backCursor }};clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">Back</button>
+        <button onClick="{{ next }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.16);padding:13px 26px;cursor:{{ nextCursor }};opacity:{{ nextOpacity }};clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);transition:transform 0.3s ease;" style-hover="transform:translateY(-2px);"><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;pointer-events:none;box-shadow:inset 2px 2px 0.5px -2px rgba(255,255,255,0.7),inset -2px -2px 0.5px -2px rgba(255,255,255,0.7);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;">{{ nextLabel }} {{ arrowDark }}</span></button>
+      </div>
+      </sc-if>
+    </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ ABOUT ============ -->
+  <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;z-index:1;padding:clamp(108px,15vh,128px) clamp(16px,4vw,56px) 96px;max-width:1080px;margin:0 auto;">
+    <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:16px;"><span style="width:18px;height:1px;background:var(--accent);"></span>A.01 / ABOUT</div>
+    <h1 style="font-weight:700;font-size:clamp(30px,4.6vw,54px);margin:0 0 24px;line-height:1.08;letter-spacing:-1.8px;max-width:740px;">The team that pulls your cable understands the traffic on it.</h1>
+    <p style="color:var(--muted);font-size:16.5px;line-height:1.8;max-width:640px;margin:0 0 50px;">Commercial networks are too important to be an afterthought. Tekinfinity was built around one idea: the same team that wires your racks also configures your firewalls — so nothing falls between vendors and no one points fingers. From structured cabling to zero-trust security to 24/7 managed operations, one team owns the whole stack.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(146px,1fr));gap:12px;margin-bottom:52px;">
+      <sc-for list="{{ stats }}" as="x" hint-placeholder-count="4">
+        <div style="position:relative;clip-path:polygon(13px 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%,0 13px);background:linear-gradient(135deg,var(--edge),var(--line) 55%,transparent);padding:1px;">
+          <div style="clip-path:polygon(13px 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%,0 13px);background:linear-gradient(160deg,var(--card1),var(--card2));padding:22px 20px;height:100%;">
+            <div style="font-size:30px;font-weight:700;letter-spacing:-1px;">{{ x.v }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:0.3px;margin-top:7px;">{{ x.k }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:52px;">
+      <sc-for list="{{ values }}" as="v" hint-placeholder-count="3">
+        <div style="position:relative;clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);background:linear-gradient(135deg,var(--edge),var(--line) 55%,transparent);padding:1px;">
+          <div style="position:relative;clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);background:linear-gradient(160deg,var(--card1),var(--card2));padding:26px 24px;height:100%;">
+            <span style="position:absolute;top:11px;right:11px;width:11px;height:11px;border-top:1.5px solid var(--edge);border-right:1.5px solid var(--edge);"></span>
+            <div style="width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);color:var(--accent);background:var(--panel2);margin-bottom:16px;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">{{ v.icon }}</div>
+            <div style="font-size:16.5px;font-weight:600;margin-bottom:9px;letter-spacing:-0.2px;">{{ v.title }}</div>
+            <div style="font-size:13px;line-height:1.65;color:var(--muted);">{{ v.desc }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="position:relative;clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);background:linear-gradient(135deg,var(--edge),var(--line) 50%,var(--edge));padding:1px;">
+      <div style="position:relative;clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);background:linear-gradient(120deg,rgba(92,217,255,0.07),transparent 55%),linear-gradient(160deg,var(--card1),var(--card2));padding:clamp(30px,5vw,52px);text-align:center;">
+        <h3 style="font-weight:700;font-size:clamp(22px,3vw,34px);margin:0 0 14px;letter-spacing:-0.8px;">Let's build your infrastructure together.</h3>
+        <p style="color:var(--muted);margin:0 auto 24px;max-width:460px;line-height:1.6;font-size:15px;">One conversation is all it takes — full buildout, security audit or 24/7 managed operations.</p>
+        <button onClick="{{ goPay }}" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:600;color:var(--text);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.16);padding:16px 28px;cursor:pointer;clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);transition:transform 0.3s ease;" style-hover="transform:translateY(-2px);"><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);"></span><span style="position:absolute;inset:0;z-index:0;pointer-events:none;backdrop-filter:url('#container-glass');-webkit-backdrop-filter:url('#container-glass');"></span><span style="position:absolute;inset:0;z-index:1;pointer-events:none;box-shadow:inset 2px 2px 0.5px -2px rgba(255,255,255,0.7),inset -2px -2px 0.5px -2px rgba(255,255,255,0.7);"></span><span style="position:relative;z-index:2;display:inline-flex;align-items:center;gap:9px;">Request a consultation {{ arrowDark }}</span></button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- FOOTER -->
+  <footer style="position:relative;z-index:1;border-top:1px solid var(--line);padding:42px clamp(16px,4vw,56px);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);"><span style="font-weight:700;font-size:13px;color:var(--accent);">TI</span></div>
+        <div style="line-height:1.35;">
+          <div style="font-weight:700;font-size:13px;letter-spacing:1px;">TEKINFINITY</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);">tekinfinity.pages.dev · 905 805 9139</div>
+        </div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-align:right;line-height:1.7;">
+        Network · Security · Managed Operations · GTA &amp; beyond<br>© 2026 Tekinfinity Solutions. All rights reserved.
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = {
+    page: 'home', theme: 'cyan', wallet: null,
+    step: 0, service: null, amount: '', method: 'survey', email: '', txHash: '', activeProject: 2,
+    mobile: (typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(max-width:759px)').matches : false), menuOpen: false
+  };
+
+  themes = {
+    cyan:   {'--bg':'#06070e','--bg2':'#0a0c16','--card1':'rgba(20,24,38,0.9)','--card2':'rgba(9,11,19,0.94)','--edge':'rgba(92,217,255,0.28)','--accent':'#5cd9ff','--accent2':'#7b8cff','--glow':'rgba(92,217,255,0.18)','--line':'rgba(255,255,255,0.08)','--text':'#eaf0fa','--muted':'#7e879d'},
+    violet: {'--bg':'#0a0712','--bg2':'#100b1c','--card1':'rgba(34,22,52,0.9)','--card2':'rgba(14,9,24,0.94)','--edge':'rgba(181,139,255,0.30)','--accent':'#b58bff','--accent2':'#ff7ab8','--glow':'rgba(181,139,255,0.18)','--line':'rgba(255,255,255,0.08)','--text':'#f1ecfa','--muted':'#938aa8'},
+    green:  {'--bg':'#05110c','--bg2':'#091a13','--card1':'rgba(14,38,28,0.9)','--card2':'rgba(7,18,13,0.94)','--edge':'rgba(70,230,160,0.28)','--accent':'#46e6a0','--accent2':'#5cd9ff','--glow':'rgba(70,230,160,0.16)','--line':'rgba(255,255,255,0.08)','--text':'#e9f6ef','--muted':'#7fa093'}
+  };
+
+  iconDefs = {
+    building: [['path',{d:'M5 21V4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v17'}],['path',{d:'M14 21V9h4a1 1 0 0 1 1 1v11'}],['path',{d:'M3 21h18'}],['path',{d:'M8 7h2'}],['path',{d:'M8 11h2'}],['path',{d:'M8 15h2'}]],
+    badge: [['circle',{cx:12,cy:12,r:9}],['path',{d:'m8.5 12 2.5 2.5 4.5-4.5'}]],
+    hexagon: [['path',{d:'M12 2.6 20 7v10l-8 4.4L4 17V7l8-4.4Z'}],['path',{d:'M12 8.5v7'}],['path',{d:'M8.7 10.2v3.6'}],['path',{d:'M15.3 10.2v3.6'}]],
+    shield: [['path',{d:'M12 3 5 6v5c0 4.2 3 7 7 8 4-1 7-3.8 7-8V6l-7-3Z'}],['path',{d:'m9 12 2 2 4-4'}]],
+    paint: [['rect',{x:3,y:3,width:13,height:6,rx:1}],['path',{d:'M16 6h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-7a1 1 0 0 0-1 1v2'}],['rect',{x:9.5,y:15,width:4,height:6,rx:1}]],
+    card: [['rect',{x:2,y:5,width:20,height:14,rx:2}],['path',{d:'M2 10h20'}],['path',{d:'M6 15h3'}]],
+    file: [['path',{d:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z'}],['path',{d:'M14 3v5h5'}],['path',{d:'M9 13h6'}],['path',{d:'M9 17h6'}]],
+    home: [['path',{d:'m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'}],['path',{d:'M9 21V12h6v9'}]],
+    layers: [['path',{d:'M12 2 2 7l10 5 10-5-10-5Z'}],['path',{d:'m2 12 10 5 10-5'}],['path',{d:'m2 17 10 5 10-5'}]],
+    lock: [['rect',{x:4,y:11,width:16,height:9,rx:2}],['path',{d:'M8 11V7a4 4 0 0 1 8 0v4'}]],
+    zap: [['path',{d:'M13 2 4 14h7l-1 8 9-12h-7l1-8Z'}]],
+    wallet: [['path',{d:'M3 7a2 2 0 0 1 2-2h12v3'}],['path',{d:'M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2Z'}],['circle',{cx:16.5,cy:12.5,r:1.1}]],
+    globe: [['circle',{cx:12,cy:12,r:9}],['path',{d:'M3 12h18'}],['path',{d:'M12 3a13 13 0 0 1 0 18 13 13 0 0 1 0-18Z'}]],
+    grid: [['rect',{x:3,y:3,width:7,height:7,rx:1.4}],['rect',{x:14,y:3,width:7,height:7,rx:1.4}],['rect',{x:3,y:14,width:7,height:7,rx:1.4}],['rect',{x:14,y:14,width:7,height:7,rx:1.4}]],
+    arrow: [['path',{d:'M5 12h14'}],['path',{d:'m13 6 6 6-6 6'}]],
+    check: [['path',{d:'m5 13 4 4 10-11'}]],
+    chain: [['path',{d:'M9 15 15 9'}],['path',{d:'M11 6.5 12.5 5a3.5 3.5 0 0 1 5 5l-1.5 1.5'}],['path',{d:'M13 17.5 11.5 19a3.5 3.5 0 0 1-5-5L8 12.5'}]],
+    menu: [['path',{d:'M3 6h18'}],['path',{d:'M3 12h18'}],['path',{d:'M3 18h18'}]],
+    close: [['path',{d:'M6 6l12 12'}],['path',{d:'M18 6 6 18'}]]
+  };
+
+  icon(name, size) {
+    const s = size || 22;
+    const kids = (this.iconDefs[name] || []).map((d, i) =>
+      React.createElement(d[0], Object.assign({ key: i }, d[1])));
+    return React.createElement('svg', {
+      width: s, height: s, viewBox: '0 0 24 24', fill: 'none',
+      stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round'
+    }, kids);
+  }
+
+  componentDidMount() {
+    this._raf = null; this._rraf = null;
+    this.isTouch = (typeof window !== 'undefined') && (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
+    if (!this.isTouch) {
+      this.onMove = (e) => {
+        const w = window.innerWidth, h = window.innerHeight;
+        const mx = (e.clientX / w - 0.5) * 2, my = (e.clientY / h - 0.5) * 2;
+        if (this._raf) return;
+        this._raf = requestAnimationFrame(() => {
+          this._raf = null;
+          const el = this.heroRef && this.heroRef.current;
+          if (el) { el.style.setProperty('--mx', mx.toFixed(3)); el.style.setProperty('--my', my.toFixed(3)); }
+        });
+      };
+      window.addEventListener('mousemove', this.onMove);
+    }
+    this.mq = window.matchMedia('(max-width:759px)');
+    this.onMq = (e) => this.setState({ mobile: e.matches });
+    if (this.mq.addEventListener) this.mq.addEventListener('change', this.onMq); else this.mq.addListener(this.onMq);
+    this.setState({ mobile: this.mq.matches });
+    this.applyTheme(this.state.theme);
+    [600, 1500, 3000, 6000].forEach(t => setTimeout(() => this.hideSplineLogo(), t));
+  }
+  componentWillUnmount() {
+    if (this.onMove) window.removeEventListener('mousemove', this.onMove);
+    if (this.mq && this.onMq) { if (this.mq.removeEventListener) this.mq.removeEventListener('change', this.onMq); else this.mq.removeListener(this.onMq); }
+  }
+  hideSplineLogo() {
+    try {
+      const sv = document.querySelector('spline-viewer');
+      if (!sv || !sv.shadowRoot) return;
+      sv.shadowRoot.querySelectorAll('#logo, a[href*="spline.design"], [id*="watermark"], [class*="watermark"], [class*="logo"]').forEach(e => { e.style.display = 'none'; e.style.opacity = '0'; e.style.pointerEvents = 'none'; });
+    } catch (e) {}
+  }
+
+  applyTheme(name) {
+    const t = this.themes[name]; const el = this.rootRef && this.rootRef.current;
+    if (t && el) Object.keys(t).forEach(k => el.style.setProperty(k, t[k]));
+  }
+  setTheme(name) { this.setState({ theme: name }); this.applyTheme(name); }
+  go(page) { this.setState({ page, menuOpen: false }); try { window.scrollTo(0, 0); } catch(e){} }
+  toggleMenu() { this.setState(s => ({ menuOpen: !s.menuOpen })); }
+  closeMenu() { this.setState({ menuOpen: false }); }
+  connectWallet() {
+    if (this.state.wallet) this.setState({ wallet: null });
+    else this.setState({ wallet: '0x6f2A' + Math.floor(Math.random()*9000+1000) + '…3a21' });
+  }
+  payFor(name) { this.setState({ page: 'pay', step: 1, service: name, menuOpen: false }); try{window.scrollTo(0,0);}catch(e){} }
+  selectService(name) { this.setState({ service: name, step: 1 }); }
+  setAmount(v) { this.setState({ amount: v.replace(/[^0-9.]/g, '') }); }
+  setMethod(m) { this.setState({ method: m }); }
+  amountNum() { return parseFloat(this.state.amount) || 0; }
+  fee() { return this.amountNum() * 0.012; }
+  total() { return this.amountNum() + this.fee(); }
+  fmt(n) { return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  canNext() {
+    const s = this.state;
+    if (s.step === 0) return !!s.service;
+    if (s.step === 1) return this.amountNum() > 0;
+    return true;
+  }
+  next() {
+    if (!this.canNext()) return;
+    if (this.state.step === 3) {
+      const ref = 'REF #TKI-' + Math.floor(Math.random()*9000+1000);
+      this.setState({ step: 4, txHash: ref });
+    } else this.setState({ step: this.state.step + 1 });
+  }
+  back() { if (this.state.step > 0 && this.state.step < 4) this.setState({ step: this.state.step - 1 }); }
+  reset() { this.setState({ step: 0, service: null, amount: '', method: 'survey', email: '', txHash: '' }); }
+
+  renderVals() {
+    const s = this.state;
+    const mobile = s.mobile;
+
+    const pages = [{key:'home',label:'Home'},{key:'services',label:'Services'},{key:'about',label:'About'},{key:'pay',label:'Contact'}];
+    const navItems = pages.map((p, i) => ({
+      label: p.label, active: s.page === p.key, idx: '0' + (i + 1),
+      color: s.page === p.key ? 'var(--text)' : 'var(--muted)',
+      onClick: () => this.go(p.key)
+    }));
+    const themeChips = [
+      { name:'cyan', swatch:'#5cd9ff', key:'cyan' },
+      { name:'violet', swatch:'#b58bff', key:'violet' },
+      { name:'green', swatch:'#46e6a0', key:'green' }
+    ].map(t => ({ name:t.name, swatch:t.swatch, ring: s.theme===t.key?'#ffffff':'transparent', onClick:()=>this.setTheme(t.key) }));
+
+    const services = [
+      { ic:'building', tag:'INFRA', title:'Network Infrastructure', desc:'End-to-end network design and deployment: structured cabling, fibre, enterprise wireless and campus networks.' },
+      { ic:'layers', tag:'DATA CENTRE', title:'Data Centre Solutions', desc:'Full-lifecycle data centre services — rack & stack, containment, power distribution, colocation and migration.' },
+      { ic:'shield', tag:'SECURITY', title:'Cyber Defence', desc:'Multi-layered, zero-trust security: firewalls & UTM, penetration testing and continuous compliance.' },
+      { ic:'zap', tag:'NOC', title:'Managed Operations', desc:'Round-the-clock coverage: 24/7 NOC, proactive maintenance, SLA-backed support and Network-as-a-Service.' },
+      { ic:'grid', tag:'CABLING', title:'Structured Cabling', desc:'Certified Cat6A and fibre backbone plus horizontal cabling — tested and documented to TIA-942 standard.' },
+      { ic:'globe', tag:'WIRELESS', title:'Enterprise Wireless', desc:'High-density Wi-Fi 6E design, site surveys and seamless roaming for campuses and large facilities.' }
+    ].map(x => ({ icon: this.icon(x.ic, 24), tag:x.tag, title:x.title, desc:x.desc, onClick: () => this.payFor(x.title) }));
+
+    const processSteps = [
+      { n:'1', ic:'file', title:'Assess', desc:'We map your facility, your traffic and your risk before a single cable is pulled.' },
+      { n:'2', ic:'layers', title:'Build', desc:'Engineered and installed to standard — structured cabling, racks and fibre, zero shortcuts.' },
+      { n:'3', ic:'shield', title:'Protect', desc:'We harden every layer with firewalls and zero-trust — connectivity creates exposure.' },
+      { n:'4', ic:'zap', title:'Manage', desc:'24/7 NOC monitoring, proactive maintenance and SLA-backed support so you can focus on operations.' }
+    ].map(p => ({ n:p.n, title:p.title, desc:p.desc, icon: this.icon(p.ic, 21) }));
+
+    const payNames = ['Network Infrastructure','Data Centre Solutions','Cyber Defence','Managed Operations','Structured Cabling','Enterprise Wireless'];
+    const payIcons = ['building','layers','shield','zap','grid','globe'];
+    const payServices = payNames.map((name, i) => ({
+      name, icon: this.icon(payIcons[i], 19),
+      onClick: () => this.selectService(name),
+      border: s.service === name ? 'var(--accent)' : 'var(--line)',
+      bg: s.service === name ? 'var(--panel2)' : 'var(--bg2)'
+    }));
+
+    const quickAmounts = [5000, 25000, 100000, 250000].map(v => ({
+      label: v.toLocaleString() + ' sq ft', onClick: () => this.setState({ amount: String(v) })
+    }));
+
+    const methods = [
+      { key:'survey', ic:'building', title:'On-site survey', desc:'An engineer visits your facility to assess the space, cabling paths and requirements.' },
+      { key:'call', ic:'globe', title:'Video consultation', desc:'A remote call to scope the project, review options and outline next steps.' }
+    ].map(m => ({
+      icon: this.icon(m.ic, 20), title:m.title, desc:m.desc,
+      border: s.method===m.key?'var(--accent)':'var(--line)',
+      bg: s.method===m.key?'var(--panel2)':'var(--bg2)',
+      dotRing: s.method===m.key?'var(--accent)':'var(--line)',
+      dotFill: s.method===m.key?'var(--accent)':'transparent',
+      onClick: () => this.setMethod(m.key)
+    }));
+
+    const stepNames = ['Service','Facility','Contact','Review'];
+    const steps = stepNames.map((name, i) => {
+      const done = s.step > i, active = s.step === i;
+      return {
+        name, mark: done ? '✓' : String(i + 1),
+        ring: (done||active) ? 'var(--accent)' : 'var(--line)',
+        fg: active ? '#06070d' : (done ? 'var(--accent)' : 'var(--muted)'),
+        bg: active ? 'var(--accent)' : 'transparent',
+        label: (done||active) ? 'var(--text)' : 'var(--muted)',
+        line: i < stepNames.length - 1,
+        lineColor: s.step > i ? 'var(--accent)' : 'var(--line)'
+      };
+    });
+
+    const sqft = this.amountNum();
+    const timelineEst = sqft<=0 ? '—' : (sqft<5000 ? '2–3 weeks' : sqft<25000 ? '4–6 weeks' : sqft<100000 ? '8–12 weeks' : '3–6 months');
+    const summary = [
+      { k:'Service', v: s.service || '—', color:'var(--text)' },
+      { k:'Facility size', v: sqft>0 ? sqft.toLocaleString()+' sq ft' : '—', color:'var(--text)' },
+      { k:'Preferred contact', v: s.method==='survey'?'On-site survey':'Video consultation', color:'var(--text)' },
+      { k:'Region', v: 'GTA + beyond', color:'var(--muted)' },
+      { k:'Response time', v: '≤ 1 business day', color:'var(--accent2)' }
+    ];
+
+    const R = (typeof window !== 'undefined' && window.__resources) || {};
+    const projData = [
+      { img: R.d1 || 'assets/deployments/d1.png', title:'Data Centre Buildout', city:'Mississauga, ON', meta:'Tier-III hall · 180 racks', price:'Live & monitored · 99.99% uptime' },
+      { img: R.d2 || 'assets/deployments/d2.png', title:'Structured Cabling', city:'Toronto, ON', meta:'Cat6A + fibre · 14 floors', price:'Certified to TIA-942' },
+      { img: R.d3 || 'assets/deployments/d3.png', title:'Fibre Backbone', city:'Vaughan, ON', meta:'Dark fibre ring · 6 sites', price:'Live & monitored · 99.99% uptime' },
+      { img: R.d4 || 'assets/deployments/d4.png', title:'Cyber Defence', city:'Markham, ON', meta:'Zero-trust · SOC integration', price:'Continuous compliance' },
+      { img: R.d5 || 'assets/deployments/d5.png', title:'24/7 NOC Onboarding', city:'Brampton, ON', meta:'SLA monitoring · 42 nodes', price:'Live — <15 min response' },
+      { img: R.d6 || 'assets/deployments/d6.png', title:'Enterprise Wireless', city:'Hamilton, ON', meta:'Wi-Fi 6E · 220K sq ft', price:'Live & monitored · 99.99% uptime' }
+    ];
+    const act = this.state.activeProject;
+    const fanStep = mobile ? 30 : 80, fanRot = mobile ? 3.5 : 6, fanLift = mobile ? 12 : 26;
+    const cardW = mobile ? 210 : 236, cardH = mobile ? 296 : 330, carH = mobile ? 372 : 430;
+    const fanCards = projData.map((p, i) => {
+      const off = i - act, ao = Math.abs(off);
+      const tx = off * fanStep, ty = off === 0 ? -14 : ao * fanLift, rot = off * fanRot;
+      const sc = Math.max(0.82, 1 - ao * (mobile ? 0.06 : 0.07));
+      let opacity;
+      if (mobile) opacity = ao === 0 ? '1' : (ao === 1 ? '0.34' : '0');
+      else opacity = ao > 2 ? '0' : (1 - ao * 0.22).toFixed(2);
+      return {
+        img: p.img, title: p.title, city: p.city, idx: '0' + (i + 1) + ' / 06',
+        imgEl: React.createElement('img', { src: p.img, alt: p.title, style: { width:'100%', height:'100%', objectFit:'cover', display:'block' } }),
+        transform: 'translateX(' + tx + 'px) translateY(' + ty + 'px) rotate(' + rot + 'deg) scale(' + sc.toFixed(3) + ')',
+        z: String(20 - ao),
+        opacity,
+        onClick: () => this.setState({ activeProject: i })
+      };
+    });
+    const ap = projData[act];
+    const enabled = this.canNext();
+
+    const tickerItems = [
+      'FIBRE RUN CERTIFIED · TIA-942', 'FIREWALL POLICY DEPLOYED · SITE-04', 'NOC ALERT RESOLVED · 4 MIN',
+      'RACK & STACK COMPLETE · 42U', 'ZERO-TRUST ROLLOUT · PHASE 3', 'WIRELESS SURVEY · 220K SQ FT'
+    ];
+    const tickerEls = (key) => tickerItems.map((t, i) => React.createElement('span', {
+      key: key + i, style: { display:'inline-flex', alignItems:'center', whiteSpace:'nowrap', padding:'0 28px' }
+    }, React.createElement('span', { style: { color:'var(--accent)', marginRight:'10px' } }, '◇'), t));
+
+    return {
+      rootRef: this.rootRef || (this.rootRef = React.createRef()),
+      heroRef: this.heroRef || (this.heroRef = React.createRef()),
+      isHome: s.page==='home', isServices: s.page==='services', isPay: s.page==='pay', isAbout: s.page==='about',
+      goHome: () => this.go('home'), goServices: () => this.go('services'), goPay: () => this.go('pay'),
+      navItems, themeChips, services, processSteps,
+      navDesktop: !mobile, navMobile: mobile, menuOpen: s.menuOpen,
+      toggleMenu: () => this.toggleMenu(), closeMenu: () => this.closeMenu(),
+      menuIcon: this.icon('menu', 22), closeIcon: this.icon('close', 22),
+      fanCards, activeTitle: ap.title, activeMeta: ap.meta, activeCity: ap.city, activePrice: ap.price,
+      fanHint: mobile ? 'Swipe the arrows to browse.' : 'Click a card to bring it forward.',
+      cardWpx: cardW + 'px', cardHpx: cardH + 'px', carHpx: carH + 'px', cardNegHalf: (-cardW/2) + 'px',
+      chevR: this.icon('arrow', 18),
+      prevProject: () => this.setState({ activeProject: (act + projData.length - 1) % projData.length }),
+      nextProject: () => this.setState({ activeProject: (act + 1) % projData.length }),
+      walletLabel: 'Get a quote',
+      walletDot: '#46e6a0',
+      connectWallet: () => this.go('pay'),
+      tickerA: tickerEls('a'), tickerB: tickerEls('b'),
+      glassFilter: React.createElement('svg',{width:0,height:0,style:{position:'absolute'},'aria-hidden':true},React.createElement('defs',null,React.createElement('filter',{id:'container-glass',x:'0%',y:'0%',width:'100%',height:'100%',colorInterpolationFilters:'sRGB'},React.createElement('feTurbulence',{type:'fractalNoise',baseFrequency:'0.05 0.05',numOctaves:1,seed:1,result:'turbulence'}),React.createElement('feGaussianBlur',{in:'turbulence',stdDeviation:2,result:'blurredNoise'}),React.createElement('feDisplacementMap',{in:'SourceGraphic',in2:'blurredNoise',scale:70,xChannelSelector:'R',yChannelSelector:'B',result:'displaced'}),React.createElement('feGaussianBlur',{in:'displaced',stdDeviation:4,result:'finalBlur'}),React.createElement('feComposite',{in:'finalBlur',in2:'finalBlur',operator:'over'})))),
+      arrowDark: this.icon('arrow', 17),
+      arrowAccent: this.icon('arrow', 15),
+      lockIcon: this.icon('lock', 14),
+      chainIcon: this.icon('chain', 14),
+      checkIcon: this.icon('check', 30),
+      heroStats: [
+        { v:'99.99%', k:'UPTIME SLA' },
+        { v:'<15m', k:'INCIDENT RESPONSE' },
+        { v:'24/7', k:'NOC COVERAGE' }
+      ],
+      steps, payServices, quickAmounts, methods, summary,
+      selectedService: s.service || 'your project',
+      amount: s.amount, onAmount: (e) => this.setAmount(e.target.value),
+      email: s.email, onEmail: (e) => this.setState({ email: e.target.value }),
+      timelineEst,
+      isStep0: s.step===0, isStep1: s.step===1, isStep2: s.step===2, isStep3: s.step===3, isDone: s.step===4,
+      showNav: s.step <= 3,
+      next: () => this.next(), back: () => this.back(), reset: () => this.reset(),
+      backColor: s.step===0?'var(--muted)':'var(--text)',
+      backCursor: s.step===0?'not-allowed':'pointer',
+      nextLabel: s.step===3?'Submit request':'Continue',
+      nextCursor: enabled?'pointer':'not-allowed',
+      nextOpacity: enabled?'1':'0.4',
+      txHash: s.txHash,
+      emailSuffix: s.email ? (' to ' + s.email) : '',
+      stats: [
+        { v:'12+ yrs', k:'In the field' },
+        { v:'400+', k:'Sites deployed' },
+        { v:'99.99%', k:'Uptime SLA' },
+        { v:'24/7', k:'NOC coverage' }
+      ],
+      values: [
+        { ic:'badge', title:'Certified Tier-1 engineers', desc:'Cisco, Palo Alto and CommScope-certified engineers on every deployment.' },
+        { ic:'zap', title:'Proactive surveillance', desc:'AI-driven monitoring spots anomalies and stops them before they become outages.' },
+        { ic:'shield', title:'Single point of contact', desc:'One team owns cabling, security and support — complete accountability, no finger-pointing.' }
+      ].map(v => ({ icon: this.icon(v.ic, 21), title:v.title, desc:v.desc }))
+    };
+  }
+}
+</script>
+</body>
+</html>

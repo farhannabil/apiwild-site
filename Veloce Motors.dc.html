@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:#07080d;}
+  a{color:#d8ff3d;text-decoration:none;}
+  a:hover{color:#eaf0fa;}
+  ::selection{background:rgba(216,255,61,0.25);color:#fff;}
+  @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  @keyframes ringspin{to{transform:rotate(360deg);}}
+  @keyframes ringspinRev{to{transform:rotate(-360deg);}}
+  @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes auroraDrift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-3%,2%) scale(1.08);}}
+  @keyframes menuIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes glowIn{from{opacity:0;transform:translateY(36px);}to{opacity:1;transform:translateY(0);}}
+  ::-webkit-scrollbar{width:9px;}
+  ::-webkit-scrollbar-track{background:#07080d;}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:10px;}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="--bg:#07080d;--bg2:#0b0d15;--panel:rgba(255,255,255,0.022);--panel2:rgba(255,255,255,0.045);--edge:rgba(216,255,61,0.3);--accent:#d8ff3d;--accent2:#8b7bff;--glow:rgba(216,255,61,0.14);--line:rgba(255,255,255,0.08);--text:#eaf0fa;--muted:#7e879d;--pi:1;font-family:'Space Grotesk',sans-serif;color:var(--text);background:var(--bg);min-height:100vh;position:relative;overflow-x:hidden;">
+
+  <!-- ambient bg -->
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;">
+    <div style="position:absolute;top:-20%;right:-10%;width:70vw;height:70vw;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 62%);will-change:transform;transform:translateZ(0);animation:auroraDrift 26s ease-in-out infinite;"></div>
+    <div style="position:absolute;bottom:-30%;left:-15%;width:65vw;height:65vw;border-radius:50%;background:radial-gradient(circle,rgba(139,123,255,0.12),transparent 62%);will-change:transform;transform:translateZ(0);animation:auroraDrift 32s ease-in-out infinite reverse;"></div>
+  </div>
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.4;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:88px 88px;mask:radial-gradient(1000px 680px at 50% 0%,#000,transparent 80%);-webkit-mask:radial-gradient(1000px 680px at 50% 0%,#000,transparent 80%);"></div>
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:55;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px clamp(16px,4vw,56px);backdrop-filter:blur(8px);background:linear-gradient(180deg,rgba(7,8,13,0.96),rgba(7,8,13,0.72));border-bottom:1px solid var(--line);">
+    <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:12px;background:none;border:none;cursor:pointer;padding:0;min-height:44px;">
+      <div style="position:relative;width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--edge);background:linear-gradient(160deg,var(--panel2),transparent);clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">
+        <span style="font-weight:700;font-size:16px;letter-spacing:0.5px;color:var(--accent);">V</span>
+      </div>
+      <div style="text-align:left;line-height:1;">
+        <div style="font-weight:700;font-size:14.5px;letter-spacing:1.5px;color:var(--text);">VELOCE MOTORS</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--muted);margin-top:4px;">EV · PERFORMANCE · LUXURY</div>
+      </div>
+    </button>
+
+    <sc-if value="{{ navDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;gap:4px;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+        <button onClick="{{ item.onClick }}" style="background:none;border:none;cursor:pointer;font-size:13px;font-weight:500;letter-spacing:0.3px;color:var(--muted);padding:9px 14px;min-height:44px;" style-hover="color:var(--text);">{{ item.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:6px;padding:5px;border:1px solid var(--line);border-radius:30px;">
+        <sc-for list="{{ themeChips }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.onClick }}" title="{{ t.name }}" style="width:15px;height:15px;border-radius:50%;cursor:pointer;background:{{ t.swatch }};border:1.5px solid {{ t.ring }};padding:0;"></button>
+        </sc-for>
+      </div>
+      <button onClick="{{ goInventory }}" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px;color:#07080d;background:var(--accent);border:none;padding:12px 18px;cursor:pointer;font-weight:700;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);box-shadow:0 0 24px var(--glow);" style-hover="filter:brightness(1.1);">BROWSE INVENTORY</button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ navMobile }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ toggleMenu }}" aria-label="Menu" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font-size:20px;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">≡</button>
+    </sc-if>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:60;background:rgba(7,8,13,0.97);backdrop-filter:blur(18px);display:flex;flex-direction:column;padding:18px clamp(16px,5vw,40px) 40px;animation:menuIn 0.25s ease both;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);">VELOCE · NAV</div>
+      <button onClick="{{ closeMenu }}" aria-label="Close" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font-size:17px;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;flex:1;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+        <button onClick="{{ item.onClick }}" style="display:flex;align-items:baseline;gap:16px;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);cursor:pointer;padding:22px 4px;color:var(--text);">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);">{{ item.idx }}</span>
+          <span style="font-size:30px;font-weight:600;letter-spacing:-0.5px;">{{ item.label }}</span>
+        </button>
+      </sc-for>
+      <button onClick="{{ goInventoryMobile }}" style="margin-top:32px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1px;color:#07080d;background:var(--accent);border:none;padding:18px;cursor:pointer;font-weight:700;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">BROWSE INVENTORY →</button>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:28px;justify-content:center;">
+        <sc-for list="{{ themeChips }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.onClick }}" title="{{ t.name }}" style="width:26px;height:26px;border-radius:50%;cursor:pointer;background:{{ t.swatch }};border:2px solid {{ t.ring }};padding:0;"></button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Home">
+
+    <!-- HERO -->
+    <header style="position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:110px clamp(16px,5vw,64px) 90px;overflow:hidden;">
+      <div aria-hidden="true" style="position:absolute;top:8%;left:50%;white-space:nowrap;font-weight:700;font-size:clamp(90px,17vw,300px);letter-spacing:0.02em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.07);pointer-events:none;will-change:transform;transform:translate(-50%,0) translate3d(calc(var(--mx,0)*-14px),calc(var(--sy,0)*var(--pi)*0.18px),0);">VELOCE</div>
+      <div aria-hidden="true" style="position:absolute;top:14%;right:6%;width:280px;height:280px;border:1px dashed rgba(255,255,255,0.1);border-radius:50%;animation:ringspin 40s linear infinite;pointer-events:none;"></div>
+      <div aria-hidden="true" style="position:absolute;top:19%;right:9.5%;width:180px;height:180px;border:1px solid var(--edge);border-radius:50%;animation:ringspinRev 26s linear infinite;pointer-events:none;opacity:0.5;"></div>
+
+      <div style="position:relative;display:grid;grid-template-columns:{{ heroCols }};gap:clamp(24px,4vw,64px);align-items:center;max-width:1360px;margin:0 auto;width:100%;">
+        <div style="animation:glowIn 0.8s ease both;">
+          <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2.5px;color:var(--accent);border:1px solid var(--edge);padding:8px 14px;margin-bottom:26px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:blink 1.6s infinite;"></span>
+            TORONTO · GTA SHOWROOM
+          </div>
+          <h1 style="margin:0 0 20px;font-size:clamp(40px,6.2vw,86px);line-height:1.02;font-weight:700;letter-spacing:-0.02em;">Drive the<br>next decade,<br><span style="color:var(--accent);text-shadow:0 0 40px var(--glow);">today.</span></h1>
+          <p style="margin:0 0 34px;max-width:480px;font-size:clamp(15px,1.4vw,18px);line-height:1.65;color:var(--muted);text-wrap:pretty;">Hand-picked electric, performance and luxury vehicles — inspected, certified and delivered anywhere in the GTA within 48 hours.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <button onClick="{{ goInventory }}" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1px;font-weight:700;color:#07080d;background:var(--accent);border:none;padding:17px 26px;cursor:pointer;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);box-shadow:0 0 30px var(--glow);" style-hover="filter:brightness(1.1);">VIEW INVENTORY →</button>
+            <button onClick="{{ goFeatured }}" style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:17px 26px;cursor:pointer;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);" style-hover="border-color:var(--accent);">FEATURED</button>
+          </div>
+          <div style="display:flex;gap:clamp(20px,3.5vw,48px);margin-top:44px;flex-wrap:wrap;">
+            <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="3">
+              <div>
+                <div style="font-size:clamp(22px,2.4vw,30px);font-weight:700;color:var(--text);">{{ s.value }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-top:5px;">{{ s.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="position:relative;will-change:transform;transform:translate3d(calc(var(--mx,0)*10px),calc(var(--my,0)*8px + var(--sy,0)*var(--pi)*-0.06px),0);animation:glowIn 1s 0.15s ease both;">
+          <div style="position:relative;aspect-ratio:16/10;border:1px solid var(--edge);background:linear-gradient(160deg,var(--panel2),rgba(7,8,13,0.6));padding:10px;clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px);box-shadow:0 30px 80px rgba(0,0,0,0.5),0 0 60px var(--glow);">
+            <div style="position:relative;width:100%;height:100%;">
+              <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="hero-car" shape="rect" placeholder="Drop your hero vehicle photo" hint-size="100%,100%"></x-import>
+            </div>
+            <div style="position:absolute;top:20px;left:22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);pointer-events:none;">FEATURED UNIT · 001</div>
+          </div>
+          <div style="position:absolute;bottom:-18px;right:-8px;display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--text);background:var(--bg2);border:1px solid var(--line);padding:12px 16px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);animation:floaty 5s ease-in-out infinite;">
+            <span style="color:var(--accent);">819 HP</span><span style="color:var(--muted);">·</span><span>0–100 IN 3.0 S</span><span style="color:var(--muted);">·</span><span style="color:var(--accent2);">830 KM</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);animation:blink 2.4s infinite;">SCROLL ▾</div>
+    </header>
+
+    <!-- TICKER -->
+    <div style="position:relative;z-index:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(7,8,13,0.7);overflow:hidden;padding:13px 0;">
+      <div style="display:flex;gap:44px;width:max-content;animation:ticker 36s linear infinite;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1.5px;white-space:nowrap;">
+        <sc-for list="{{ tickerItems }}" as="tk" hint-placeholder-count="8">
+          <span style="display:flex;gap:12px;align-items:center;"><span style="color:var(--accent);">◆</span><span style="color:var(--text);">{{ tk.name }}</span><span style="color:var(--muted);">{{ tk.price }}</span></span>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- FEATURED (parallax panels) -->
+    <section id="sec-featured" style="position:relative;z-index:1;padding:clamp(60px,9vw,130px) clamp(16px,5vw,64px);max-width:1360px;margin:0 auto;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(36px,5vw,64px);">
+        <h2 style="margin:0;font-size:clamp(30px,4vw,52px);font-weight:700;letter-spacing:-0.02em;">Featured <span style="color:var(--accent);">this week</span></h2>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);">03 / HAND-PICKED</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:clamp(40px,6vw,90px);">
+        <sc-for list="{{ featured }}" as="f" hint-placeholder-count="3">
+          <div data-reveal="true" style="display:grid;grid-template-columns:{{ f.cols }};gap:clamp(20px,3.5vw,54px);align-items:center;">
+            <div style="order:{{ f.imgOrder }};position:relative;">
+              <div aria-hidden="true" style="position:absolute;top:-26px;font-family:'JetBrains Mono',monospace;font-size:clamp(60px,8vw,110px);font-weight:700;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.08);pointer-events:none;left:{{ f.numLeft }};right:{{ f.numRight }};transform:translate3d(0,calc(var(--sy,0)*var(--pi)*{{ f.plx }}px),0);">{{ f.num }}</div>
+              <div style="position:relative;aspect-ratio:16/9;border:1px solid var(--line);background:var(--panel);padding:8px;clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);">
+                <div style="position:relative;width:100%;height:100%;">
+                  <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ f.slotId }}" shape="rect" placeholder="{{ f.placeholder }}" hint-size="100%,100%"></x-import>
+                </div>
+              </div>
+            </div>
+            <div style="order:{{ f.txtOrder }};">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:12px;">{{ f.tag }}</div>
+              <h3 style="margin:0 0 12px;font-size:clamp(24px,2.6vw,36px);font-weight:700;letter-spacing:-0.01em;">{{ f.name }}</h3>
+              <p style="margin:0 0 20px;color:var(--muted);line-height:1.65;font-size:15px;max-width:440px;text-wrap:pretty;">{{ f.blurb }}</p>
+              <div style="display:flex;gap:26px;margin-bottom:26px;flex-wrap:wrap;">
+                <sc-for list="{{ f.specs }}" as="sp" hint-placeholder-count="3">
+                  <div><div style="font-size:19px;font-weight:700;">{{ sp.v }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1.5px;color:var(--muted);margin-top:3px;">{{ sp.k }}</div></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+                <div style="font-size:24px;font-weight:700;color:var(--accent);">{{ f.price }}</div>
+                <button onClick="{{ f.onOpen }}" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--text);background:var(--panel2);border:1px solid var(--edge);padding:13px 20px;cursor:pointer;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);" style-hover="background:var(--glow);">DETAILS →</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section id="sec-inventory" style="position:relative;z-index:1;padding:clamp(50px,7vw,100px) clamp(16px,5vw,64px);border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(11,13,21,0.6),transparent);">
+      <div style="max-width:1360px;margin:0 auto;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px;">
+          <h2 style="margin:0;font-size:clamp(30px,4vw,52px);font-weight:700;letter-spacing:-0.02em;">Inventory</h2>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);">{{ invCount }} VEHICLES IN STOCK</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:34px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="5">
+              <button onClick="{{ c.onClick }}" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1px;color:{{ c.color }};background:{{ c.bg }};border:1px solid {{ c.border }};padding:11px 16px;cursor:pointer;min-height:44px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ toggleSort }}" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1px;color:var(--muted);background:none;border:1px solid var(--line);padding:11px 16px;cursor:pointer;min-height:44px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);" style-hover="color:var(--text);border-color:var(--accent);">{{ sortLabel }}</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:20px;">
+          <sc-for list="{{ inventory }}" as="v" hint-placeholder-count="6">
+            <div data-reveal="true" onClick="{{ v.onOpen }}" style="position:relative;cursor:pointer;border:1px solid var(--line);background:linear-gradient(170deg,rgba(20,23,36,0.85),rgba(9,11,18,0.92));clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);transition:border-color 0.2s,transform 0.2s;" style-hover="border-color:var(--edge);transform:translateY(-4px);">
+              <div style="position:relative;height:190px;border-bottom:1px solid var(--line);">
+                <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ v.slotId }}" shape="rect" placeholder="{{ v.placeholder }}" hint-size="100%,190px"></x-import>
+                <div style="position:absolute;top:12px;left:12px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1.5px;color:var(--accent);background:rgba(7,8,13,0.85);border:1px solid var(--edge);padding:5px 9px;pointer-events:none;">{{ v.tag }}</div>
+              </div>
+              <div style="padding:18px;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-bottom:7px;">{{ v.year }} · {{ v.km }}</div>
+                <div style="font-size:18px;font-weight:700;letter-spacing:-0.01em;margin-bottom:12px;">{{ v.name }}</div>
+                <div style="display:flex;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);margin-bottom:14px;flex-wrap:wrap;">
+                  <span>{{ v.power }}</span><span style="color:var(--line);">|</span><span>{{ v.accel }}</span><span style="color:var(--line);">|</span><span>{{ v.drive }}</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                  <div style="font-size:20px;font-weight:700;color:var(--accent);">{{ v.price }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1px;color:var(--muted);">{{ v.monthly }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="sec-services" style="position:relative;z-index:1;padding:clamp(50px,7vw,100px) clamp(16px,5vw,64px);border-top:1px solid var(--line);">
+      <div style="max-width:1360px;margin:0 auto;">
+        <h2 style="margin:0 0 40px;font-size:clamp(30px,4vw,52px);font-weight:700;letter-spacing:-0.02em;">Buy it <span style="color:var(--accent);">your way</span></h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:18px;">
+          <sc-for list="{{ services }}" as="sv" hint-placeholder-count="4">
+            <div data-reveal="true" style="border:1px solid var(--line);background:var(--panel);padding:26px 22px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:14px;">{{ sv.idx }}</div>
+              <div style="font-size:19px;font-weight:700;margin-bottom:10px;">{{ sv.title }}</div>
+              <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.65;text-wrap:pretty;">{{ sv.body }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / FOOTER -->
+    <footer id="sec-contact" style="position:relative;z-index:1;border-top:1px solid var(--line);padding:clamp(46px,6vw,80px) clamp(16px,5vw,64px) 36px;background:rgba(7,8,13,0.8);">
+      <div style="max-width:1360px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:34px;margin-bottom:44px;">
+          <div>
+            <div style="font-weight:700;font-size:16px;letter-spacing:1.5px;margin-bottom:12px;">VELOCE MOTORS</div>
+            <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.7;max-width:300px;">Certified pre-owned electric, performance and luxury vehicles. Serving Toronto and the GTA since 2019.</p>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:2px;color:var(--muted);margin-bottom:14px;">SHOWROOM</div>
+            <div style="color:var(--text);font-size:14px;line-height:1.8;">2200 Highway 7 W<br>Vaughan, ON L4K 1W6<br>Mon–Sat · 9:00–19:00</div>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:2px;color:var(--muted);margin-bottom:14px;">CONTACT</div>
+            <div style="font-size:14px;line-height:1.8;"><a href="tel:+14165550199">(416) 555-0199</a><br><a href="mailto:sales@velocemotors.ca">sales@velocemotors.ca</a></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--muted);">
+          <span>© 2026 VELOCE MOTORS INC. · OMVIC REGISTERED</span>
+          <span>ALL PRICES + HST & LICENSING</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  </sc-if>
+
+  <!-- ============ DETAIL ============ -->
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Vehicle detail" style="position:relative;z-index:1;padding:100px clamp(16px,5vw,64px) 70px;max-width:1200px;margin:0 auto;">
+    <button onClick="{{ goInventory }}" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1.5px;color:var(--muted);background:none;border:1px solid var(--line);padding:11px 16px;cursor:pointer;margin-bottom:28px;min-height:44px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);" style-hover="color:var(--text);border-color:var(--accent);">← INVENTORY</button>
+    <div style="display:grid;grid-template-columns:{{ detailCols }};gap:clamp(24px,4vw,56px);align-items:start;">
+      <div style="position:relative;">
+        <div style="position:relative;aspect-ratio:16/10;border:1px solid var(--edge);background:var(--panel);padding:9px;clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);box-shadow:0 24px 60px rgba(0,0,0,0.45),0 0 50px var(--glow);">
+          <div style="position:relative;width:100%;height:100%;">
+            <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ dv.slotId }}" shape="rect" placeholder="{{ dv.placeholder }}" hint-size="100%,100%"></x-import>
+          </div>
+        </div>
+        <div style="margin-top:22px;border:1px solid var(--line);background:var(--panel);padding:22px;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:2px;color:var(--accent);margin-bottom:14px;">CONDITION REPORT</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;">
+            <sc-for list="{{ dv.condition }}" as="cd" hint-placeholder-count="4">
+              <div><div style="font-size:14px;font-weight:600;color:var(--text);">{{ cd.v }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--muted);margin-top:3px;">{{ cd.k }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:10px;">{{ dv.tag }} · {{ dv.year }}</div>
+        <h1 style="margin:0 0 8px;font-size:clamp(28px,3.4vw,44px);font-weight:700;letter-spacing:-0.02em;">{{ dv.name }}</h1>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);letter-spacing:1px;margin-bottom:22px;">{{ dv.km }} · {{ dv.drive }} · VIN {{ dv.vin }}</div>
+        <p style="margin:0 0 26px;color:var(--muted);line-height:1.7;font-size:15px;text-wrap:pretty;">{{ dv.blurb }}</p>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;">
+          <sc-for list="{{ dv.specs }}" as="sp" hint-placeholder-count="6">
+            <div style="border:1px solid var(--line);background:var(--panel);padding:15px 16px;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);">
+              <div style="font-size:18px;font-weight:700;">{{ sp.v }}</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1.5px;color:var(--muted);margin-top:4px;">{{ sp.k }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="border:1px solid var(--edge);background:linear-gradient(160deg,var(--panel2),transparent);padding:24px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
+            <div style="font-size:32px;font-weight:700;color:var(--accent);">{{ dv.price }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;">{{ dv.monthly }} · 60 MO</div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);margin-bottom:18px;">+ HST & LICENSING · $599 ADMIN</div>
+          <button onClick="{{ startCheckout }}" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1.5px;font-weight:700;color:#07080d;background:var(--accent);border:none;padding:18px;cursor:pointer;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);box-shadow:0 0 30px var(--glow);" style-hover="filter:brightness(1.1);">RESERVE · PAYMENT & DELIVERY →</button>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--muted);text-align:center;margin-top:12px;">FULLY REFUNDABLE $500 DEPOSIT HOLDS THIS VEHICLE 7 DAYS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ CHECKOUT ============ -->
+  <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Payment & delivery" style="position:relative;z-index:1;padding:100px clamp(16px,5vw,64px) 80px;max-width:860px;margin:0 auto;">
+    <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+    <button onClick="{{ backFromCheckout }}" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1.5px;color:var(--muted);background:none;border:1px solid var(--line);padding:11px 16px;cursor:pointer;margin-bottom:28px;min-height:44px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);" style-hover="color:var(--text);">← BACK</button>
+    <div style="display:flex;gap:6px;margin-bottom:34px;">
+      <sc-for list="{{ stepDots }}" as="d" hint-placeholder-count="4">
+        <div style="flex:1;">
+          <div style="height:3px;background:{{ d.bar }};margin-bottom:8px;"></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1.5px;color:{{ d.color }};">{{ d.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border:1px solid var(--line);background:var(--panel);padding:8px 20px 20px;margin-bottom:26px;display:flex;align-items:center;gap:16px;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);padding-top:16px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--muted);">RESERVING</div>
+      <div style="font-weight:700;font-size:16px;">{{ dv.name }}</div>
+      <div style="margin-left:auto;font-weight:700;color:var(--accent);">{{ dv.price }}</div>
+    </div>
+
+    <sc-if value="{{ step1 }}" hint-placeholder-val="{{ true }}">
+      <h2 style="margin:0 0 22px;font-size:clamp(24px,3vw,34px);font-weight:700;">How would you like to pay?</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <sc-for list="{{ payOptions }}" as="p" hint-placeholder-count="3">
+          <button onClick="{{ p.onClick }}" style="text-align:left;display:flex;align-items:center;gap:18px;background:{{ p.bg }};border:1px solid {{ p.border }};padding:20px;cursor:pointer;color:var(--text);clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);">
+            <div style="width:18px;height:18px;border-radius:50%;border:2px solid {{ p.dotBorder }};display:grid;place-items:center;flex:none;"><div style="width:8px;height:8px;border-radius:50%;background:{{ p.dot }};"></div></div>
+            <div style="flex:1;">
+              <div style="font-size:17px;font-weight:700;">{{ p.title }}</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.5;">{{ p.sub }}</div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);white-space:nowrap;">{{ p.figure }}</div>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ step2 }}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin:0 0 22px;font-size:clamp(24px,3vw,34px);font-weight:700;">Delivery or pickup?</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+        <sc-for list="{{ deliveryOptions }}" as="p" hint-placeholder-count="2">
+          <button onClick="{{ p.onClick }}" style="text-align:left;display:flex;align-items:center;gap:18px;background:{{ p.bg }};border:1px solid {{ p.border }};padding:20px;cursor:pointer;color:var(--text);clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);">
+            <div style="width:18px;height:18px;border-radius:50%;border:2px solid {{ p.dotBorder }};display:grid;place-items:center;flex:none;"><div style="width:8px;height:8px;border-radius:50%;background:{{ p.dot }};"></div></div>
+            <div style="flex:1;">
+              <div style="font-size:17px;font-weight:700;">{{ p.title }}</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.5;">{{ p.sub }}</div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);white-space:nowrap;">{{ p.figure }}</div>
+          </button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ needsAddress }}" hint-placeholder-val="{{ false }}">
+        <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;">DELIVERY ADDRESS</label>
+        <input value="{{ form.address }}" onChange="{{ setAddress }}" placeholder="Street, city, postal code" style="width:100%;font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:15px 16px;outline:none;margin-bottom:20px;" />
+      </sc-if>
+      <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;">PREFERRED DATE</label>
+      <input type="date" value="{{ form.date }}" onChange="{{ setDate }}" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:14px 16px;outline:none;color-scheme:dark;" />
+    </sc-if>
+
+    <sc-if value="{{ step3 }}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin:0 0 22px;font-size:clamp(24px,3vw,34px);font-weight:700;">Your details</h2>
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <sc-for list="{{ contactFields }}" as="fld" hint-placeholder-count="3">
+          <div>
+            <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;">{{ fld.label }}</label>
+            <input type="{{ fld.type }}" value="{{ fld.value }}" onChange="{{ fld.onChange }}" placeholder="{{ fld.placeholder }}" style="width:100%;font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:15px 16px;outline:none;" />
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ step4 }}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin:0 0 22px;font-size:clamp(24px,3vw,34px);font-weight:700;">Review your reservation</h2>
+      <div style="border:1px solid var(--line);background:var(--panel);padding:24px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);">
+        <sc-for list="{{ reviewLines }}" as="r" hint-placeholder-count="7">
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid {{ r.line }};">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--muted);">{{ r.k }}</span>
+            <span style="font-size:14.5px;font-weight:{{ r.weight }};color:{{ r.color }};text-align:right;">{{ r.v }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin:16px 0 0;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);line-height:1.7;">DEPOSIT IS FULLY REFUNDABLE FOR 7 DAYS. FINAL PRICING CONFIRMED AT SIGNING. NO PAYMENT IS TAKEN ON THIS SCREEN.</p>
+    </sc-if>
+
+    <div style="display:flex;gap:12px;margin-top:30px;">
+      <sc-if value="{{ canGoBack }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ prevStep }}" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1.5px;color:var(--text);background:var(--panel2);border:1px solid var(--line);padding:16px 24px;cursor:pointer;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);" style-hover="border-color:var(--accent);">← BACK</button>
+      </sc-if>
+      <button onClick="{{ nextStep }}" style="flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1.5px;font-weight:700;color:#07080d;background:var(--accent);border:none;padding:16px 24px;cursor:pointer;opacity:{{ nextOpacity }};clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);box-shadow:0 0 24px var(--glow);" style-hover="filter:brightness(1.1);">{{ nextLabel }}</button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+    <div style="text-align:center;padding:40px 0;animation:glowIn 0.6s ease both;">
+      <div style="width:84px;height:84px;margin:0 auto 28px;border:1px solid var(--edge);display:grid;place-items:center;background:linear-gradient(160deg,var(--panel2),transparent);clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);box-shadow:0 0 40px var(--glow);">
+        <span style="font-size:34px;color:var(--accent);">✓</span>
+      </div>
+      <h2 style="margin:0 0 12px;font-size:clamp(26px,3.4vw,40px);font-weight:700;">Reservation confirmed</h2>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--accent);margin-bottom:18px;">REF · {{ refCode }}</div>
+      <p style="margin:0 auto 30px;max-width:440px;color:var(--muted);line-height:1.7;font-size:15px;text-wrap:pretty;">The {{ dv.name }} is on hold for you. Our team will call within 2 business hours to confirm {{ deliveryWord }} and arrange the deposit.</p>
+      <button onClick="{{ goHome }}" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:1.5px;color:var(--text);background:var(--panel2);border:1px solid var(--edge);padding:16px 26px;cursor:pointer;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);" style-hover="background:var(--glow);">← BACK TO SHOWROOM</button>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;volt&quot;,&quot;options&quot;:[&quot;volt&quot;,&quot;ion&quot;,&quot;ember&quot;],&quot;tsType&quot;:&quot;'volt'|'ion'|'ember'&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;parallaxIntensity&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;deliveryFee&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:499,&quot;min&quot;:0,&quot;max&quot;:2000,&quot;unit&quot;:&quot;$&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Business&quot;}}">
+class Component extends DCLogic {
+  state = { view: 'home', vid: null, cat: 'All', sort: 0, theme: 'volt', menuOpen: false, isMobile: false, step: 1, done: false,
+    form: { pay: 'finance', delivery: 'delivery', address: '', date: '', name: '', email: '', phone: '' } };
+
+  themes = {
+    volt:  { accent: '#d8ff3d', accent2: '#8b7bff', edge: 'rgba(216,255,61,0.3)',  glow: 'rgba(216,255,61,0.14)',  sel: 'rgba(216,255,61,0.25)' },
+    ion:   { accent: '#5cd9ff', accent2: '#7b8cff', edge: 'rgba(92,217,255,0.3)',  glow: 'rgba(92,217,255,0.16)',  sel: 'rgba(92,217,255,0.25)' },
+    ember: { accent: '#ffb14d', accent2: '#ff5c7a', edge: 'rgba(255,177,77,0.32)', glow: 'rgba(255,177,77,0.15)',  sel: 'rgba(255,177,77,0.25)' }
+  };
+
+  vehicles = [
+    { id: 'lucid-air',   year: 2026, name: 'Lucid Air Grand Touring',   cat: 'Sedan',       tag: 'EV · SEDAN',   price: 129900, km: '1,200 KM',  power: '819 HP',  accel: '0–100 · 3.0S', drive: 'AWD', range: '830 KM', seats: '5', battery: '112 kWh', vin: '5UXTA6C0XN9', blurb: 'The longest-range EV on the market, wrapped in a cabin that rivals anything from Stuttgart. One owner, no accidents, remaining factory warranty to 2030.' },
+    { id: 'taycan',      year: 2025, name: 'Porsche Taycan Turbo S',    cat: 'Performance', tag: 'EV · PERF',    price: 189500, km: '8,400 KM',  power: '764 HP',  accel: '0–100 · 2.4S', drive: 'AWD', range: '505 KM', seats: '4', battery: '93 kWh',  vin: 'WP0AC2Y1XPS', blurb: 'Launch control that rearranges your organs, then commutes in silence. Ceramic brakes, carbon roof, full PPF from day one.' },
+    { id: 'plaid',       year: 2025, name: 'Tesla Model S Plaid',       cat: 'Performance', tag: 'EV · PERF',    price: 114990, km: '12,900 KM', power: '1,020 HP', accel: '0–100 · 2.1S', drive: 'AWD', range: '600 KM', seats: '5', battery: '100 kWh', vin: '5YJSA1E6XMF', blurb: 'The quickest production sedan ever built. Track mode, yoke swapped for a round wheel, free supercharging transfer included.' },
+    { id: 'i7',          year: 2026, name: 'BMW i7 xDrive60',           cat: 'Sedan',       tag: 'EV · LUXURY',  price: 147000, km: '3,100 KM',  power: '536 HP',  accel: '0–100 · 4.7S', drive: 'AWD', range: '625 KM', seats: '5', battery: '102 kWh', vin: 'WBY53EJ0XPC', blurb: 'A private lounge that happens to move. Executive rear package with the 31-inch theatre screen and reclining seats.' },
+    { id: 'etron-gt',    year: 2024, name: 'Audi RS e-tron GT',         cat: 'Performance', tag: 'EV · PERF',    price: 139800, km: '16,500 KM', power: '637 HP',  accel: '0–100 · 3.3S', drive: 'AWD', range: '472 KM', seats: '4', battery: '93 kWh',  vin: 'WAUZZZFB1RN', blurb: 'Daytona Grey over red leather. Four-wheel steering, sport exhaust (yes, on an EV), certified with a fresh 300-point inspection.' },
+    { id: 'r1s',         year: 2026, name: 'Rivian R1S Quad-Motor',     cat: 'SUV',         tag: 'EV · SUV',     price: 99900,  km: '5,700 KM',  power: '835 HP',  accel: '0–100 · 3.0S', drive: 'QUAD', range: '515 KM', seats: '7', battery: '135 kWh', vin: '7FCTGAAA1PN', blurb: 'Seven seats, a tank turn party trick, and enough torque to tow your boat. Adventure package with the camp kitchen.' },
+    { id: 'eqs53',       year: 2025, name: 'Mercedes-AMG EQS 53',       cat: 'Sedan',       tag: 'EV · LUXURY',  price: 159000, km: '9,800 KM',  power: '649 HP',  accel: '0–100 · 3.8S', drive: 'AWD', range: '580 KM', seats: '5', battery: '108 kWh', vin: 'W1KCG4EB1PA', blurb: 'The Hyperscreen alone is worth the visit — 56 inches of glass across the dash. AMG Dynamic Plus and rear-axle steering.' },
+    { id: 'z06',         year: 2024, name: 'Chevrolet Corvette Z06',    cat: 'Performance', tag: 'GAS · PERF',   price: 142500, km: '6,200 KM',  power: '670 HP',  accel: '0–100 · 2.8S', drive: 'RWD', range: '—',      seats: '2', battery: 'Flat-plane V8', vin: '1G1YF2D3XR5', blurb: 'A flat-plane crank V8 screaming to 8,600 rpm. Z07 package with carbon aero. For those not ready to give up combustion.' },
+    { id: 'ioniq6n',     year: 2026, name: 'Hyundai Ioniq 6 N',         cat: 'Performance', tag: 'EV · PERF',    price: 78500,  km: '900 KM',    power: '641 HP',  accel: '0–100 · 3.2S', drive: 'AWD', range: '469 KM', seats: '5', battery: '84 kWh',  vin: 'KMHM34AC1SU', blurb: 'The giant-killer. N Grin Boost, simulated gearshifts, and a chassis tuned at the Nürburgring — for under $80k.' }
+  ];
+
+  rootRef = React.createRef();
+  _revealed = new WeakSet();
+
+  money(n) { return '$' + n.toLocaleString('en-CA'); }
+  monthly(price) {
+    const total = price * 1.13 + 599, r = 0.0699 / 12, n = 60;
+    return Math.round((total * r) / (1 - Math.pow(1 + r, -n)));
+  }
+  deliveryFee() { return this.props.deliveryFee ?? 499; }
+
+  componentDidMount() {
+    const theme = this.props.defaultTheme ?? 'volt';
+    this.setState({ theme, isMobile: window.innerWidth < 900 });
+    this._onResize = () => this.setState({ isMobile: window.innerWidth < 900 });
+    window.addEventListener('resize', this._onResize);
+    let ticking = false;
+    this._onScroll = () => {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const el = this.rootRef.current; if (el) el.style.setProperty('--sy', String(window.scrollY));
+      });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    let mTick = false;
+    this._onMouse = (e) => {
+      if (mTick || this.state.isMobile) return; mTick = true;
+      requestAnimationFrame(() => {
+        mTick = false;
+        const el = this.rootRef.current; if (!el) return;
+        el.style.setProperty('--mx', ((e.clientX / window.innerWidth) - 0.5).toFixed(3));
+        el.style.setProperty('--my', ((e.clientY / window.innerHeight) - 0.5).toFixed(3));
+      });
+    };
+    window.addEventListener('mousemove', this._onMouse, { passive: true });
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.style.opacity = '1';
+          en.target.style.transform = 'translateY(0)';
+          this._io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    this.setupReveals();
+  }
+  componentDidUpdate() { requestAnimationFrame(() => this.setupReveals()); }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('mousemove', this._onMouse);
+    if (this._io) this._io.disconnect();
+  }
+  setupReveals() {
+    const root = this.rootRef.current; if (!root || !this._io) return;
+    root.querySelectorAll('[data-reveal]').forEach(el => {
+      if (this._revealed.has(el)) return;
+      this._revealed.add(el);
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(34px)';
+      el.style.transition = 'opacity 0.45s ease, transform 0.45s cubic-bezier(0.22,1,0.36,1)';
+      this._io.observe(el);
+    });
+  }
+  applyTheme(t) {
+    const el = this.rootRef.current, th = this.themes[t]; if (!el || !th) return;
+    el.style.setProperty('--accent', th.accent);
+    el.style.setProperty('--accent2', th.accent2);
+    el.style.setProperty('--edge', th.edge);
+    el.style.setProperty('--glow', th.glow);
+  }
+  scrollToSec(id) {
+    requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 66, behavior: 'smooth' });
+    });
+  }
+  nav(id) {
+    this.setState({ menuOpen: false });
+    if (this.state.view !== 'home') {
+      this.setState({ view: 'home' }, () => setTimeout(() => this.scrollToSec(id), 60));
+    } else this.scrollToSec(id);
+  }
+  openVehicle(id) {
+    this.setState({ view: 'detail', vid: id, menuOpen: false });
+    window.scrollTo({ top: 0 });
+  }
+
+  renderVals() {
+    const s = this.state, th = this.themes[s.theme] || this.themes.volt;
+    this.applyTheme(s.theme);
+    const el = this.rootRef.current;
+    if (el) el.style.setProperty('--pi', String(this.props.parallaxIntensity ?? 1));
+    const mob = s.isMobile;
+    const dv0 = this.vehicles.find(v => v.id === s.vid) || this.vehicles[0];
+    const fee = this.deliveryFee();
+    const total = Math.round(dv0.price * 1.13 + 599 + (s.form.delivery === 'delivery' ? fee : 0));
+
+    const cats = ['All', 'Sedan', 'SUV', 'Performance'];
+    let list = this.vehicles.filter(v => s.cat === 'All' || v.cat === s.cat);
+    if (s.sort === 1) list = [...list].sort((a, b) => a.price - b.price);
+    if (s.sort === 2) list = [...list].sort((a, b) => b.price - a.price);
+
+    const vehicleCard = (v) => ({
+      slotId: 'car-' + v.id, placeholder: 'Drop photo · ' + v.name,
+      tag: v.tag, year: String(v.year), km: v.km, name: v.name, power: v.power, accel: v.accel, drive: v.drive,
+      price: this.money(v.price), monthly: this.money(this.monthly(v.price)) + '/MO',
+      onOpen: () => this.openVehicle(v.id)
+    });
+
+    const featured = this.vehicles.slice(0, 3).map((v, i) => ({
+      ...vehicleCard(v),
+      cols: mob ? '1fr' : (i % 2 ? '1fr 1.1fr' : '1.1fr 1fr'),
+      imgOrder: mob ? 1 : (i % 2 ? 2 : 1), txtOrder: mob ? 2 : (i % 2 ? 1 : 2),
+      num: '0' + (i + 1), numLeft: i % 2 ? 'auto' : '-14px', numRight: i % 2 ? '-14px' : 'auto',
+      plx: (-0.028 - i * 0.008).toFixed(3),
+      blurb: v.blurb,
+      specs: [{ v: v.power, k: 'POWER' }, { v: v.accel.replace('0–100 · ', ''), k: '0–100 KM/H' }, { v: v.range, k: 'RANGE' }]
+    }));
+
+    const payLabel = { cash: 'Cash / bank draft', finance: 'Finance', lease: 'Lease' };
+    const stepNames = ['PAYMENT', 'DELIVERY', 'CONTACT', 'REVIEW'];
+    const mkOpt = (key, field) => (arr) => arr.map(o => {
+      const on = s.form[field] === o.id;
+      return { ...o, onClick: () => this.setState({ form: { ...s.form, [field]: o.id } }),
+        bg: on ? 'linear-gradient(160deg,' + th.glow + ',transparent)' : 'var(--panel)',
+        border: on ? 'var(--edge)' : 'var(--line)', dotBorder: on ? th.accent : 'rgba(255,255,255,0.25)', dot: on ? th.accent : 'transparent' };
+    });
+    const setF = (k) => (e) => this.setState({ form: { ...this.state.form, [k]: e.target.value } });
+    const stepValid = s.step !== 3 || (s.form.name.trim() && (s.form.email.trim() || s.form.phone.trim()));
+
+    return {
+      rootRef: this.rootRef,
+      isHome: s.view === 'home', isDetail: s.view === 'detail', isCheckout: s.view === 'checkout',
+      navDesktop: !mob, navMobile: mob, menuOpen: mob && s.menuOpen,
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      goHome: () => { this.setState({ view: 'home', menuOpen: false, done: false, step: 1 }); window.scrollTo({ top: 0 }); },
+      goInventory: () => this.nav('sec-inventory'),
+      goInventoryMobile: () => this.nav('sec-inventory'),
+      goFeatured: () => this.nav('sec-featured'),
+      navItems: [
+        { idx: '01', label: 'Featured', onClick: () => this.nav('sec-featured') },
+        { idx: '02', label: 'Inventory', onClick: () => this.nav('sec-inventory') },
+        { idx: '03', label: 'Buy your way', onClick: () => this.nav('sec-services') },
+        { idx: '04', label: 'Contact', onClick: () => this.nav('sec-contact') }
+      ],
+      themeChips: Object.keys(this.themes).map(k => ({
+        name: k.toUpperCase(), swatch: this.themes[k].accent,
+        ring: s.theme === k ? '#fff' : 'transparent',
+        onClick: () => this.setState({ theme: k })
+      })),
+      heroCols: mob ? '1fr' : '1.05fr 1fr',
+      heroStats: [
+        { value: '120+', label: 'IN STOCK' }, { value: '4.9★', label: 'GOOGLE RATING' }, { value: '48 H', label: 'GTA DELIVERY' }
+      ],
+      tickerItems: [...this.vehicles, ...this.vehicles].map(v => ({ name: v.name.toUpperCase(), price: this.money(v.price) })),
+      featured,
+      invCount: String(list.length).padStart(2, '0'),
+      catChips: cats.map(c => ({
+        label: c.toUpperCase(),
+        color: s.cat === c ? '#07080d' : 'var(--muted)',
+        bg: s.cat === c ? th.accent : 'transparent',
+        border: s.cat === c ? th.accent : 'var(--line)',
+        onClick: () => this.setState({ cat: c })
+      })),
+      sortLabel: ['SORT · FEATURED', 'SORT · PRICE ↑', 'SORT · PRICE ↓'][s.sort],
+      toggleSort: () => this.setState({ sort: (s.sort + 1) % 3 }),
+      inventory: list.map(vehicleCard),
+      services: [
+        { idx: '01', title: 'Finance', body: 'From 6.99% APR across 12 lenders. Pre-approval in minutes with a soft credit check — no impact on your score.' },
+        { idx: '02', title: 'Trade-in', body: 'Instant online valuation honoured for 7 days. We handle the lien payout and the paperwork.' },
+        { idx: '03', title: 'White-glove delivery', body: 'Your car arrives on a covered trailer anywhere in the GTA within 48 hours, charged and detailed.' },
+        { idx: '04', title: '7-day exchange', body: 'Drive it for a week. If it is not the one, exchange it toward anything else in stock.' }
+      ],
+      // detail
+      dv: {
+        slotId: 'car-' + dv0.id, placeholder: 'Drop photo · ' + dv0.name,
+        tag: dv0.tag, year: String(dv0.year), name: dv0.name, km: dv0.km, drive: dv0.drive, vin: dv0.vin, blurb: dv0.blurb,
+        price: this.money(dv0.price), monthly: this.money(this.monthly(dv0.price)) + '/MO',
+        specs: [
+          { v: dv0.power, k: 'POWER' }, { v: dv0.accel.replace('0–100 · ', ''), k: '0–100 KM/H' },
+          { v: dv0.range, k: 'RANGE' }, { v: dv0.battery, k: 'POWERTRAIN' },
+          { v: dv0.seats, k: 'SEATS' }, { v: dv0.drive, k: 'DRIVETRAIN' }
+        ],
+        condition: [
+          { v: 'No accidents', k: 'CARFAX' }, { v: '300-point pass', k: 'INSPECTION' },
+          { v: 'Factory', k: 'WARRANTY' }, { v: '2 keys + charger', k: 'INCLUDED' }
+        ]
+      },
+      detailCols: mob ? '1fr' : '1.15fr 1fr',
+      startCheckout: () => { this.setState({ view: 'checkout', step: 1, done: false }); window.scrollTo({ top: 0 }); },
+      // checkout
+      notDone: !s.done, isDone: s.done,
+      backFromCheckout: () => this.setState({ view: 'detail' }),
+      stepDots: stepNames.map((n, i) => ({
+        label: n,
+        bar: i < s.step ? th.accent : 'rgba(255,255,255,0.1)',
+        color: i + 1 === s.step ? th.accent : 'var(--muted)'
+      })),
+      step1: s.step === 1, step2: s.step === 2, step3: s.step === 3, step4: s.step === 4,
+      payOptions: mkOpt('pay', 'pay')([
+        { id: 'finance', title: 'Finance', sub: '60 months · 6.99% APR · 12 lenders compete', figure: this.money(this.monthly(dv0.price)) + '/MO' },
+        { id: 'lease', title: 'Lease', sub: '48 months · 20,000 km/yr · buyout option', figure: this.money(Math.round(this.monthly(dv0.price) * 0.72)) + '/MO' },
+        { id: 'cash', title: 'Cash / bank draft', sub: 'Pay in full at signing. Wire or certified draft.', figure: this.money(Math.round(dv0.price * 1.13 + 599)) }
+      ]),
+      deliveryOptions: mkOpt('delivery', 'delivery')([
+        { id: 'delivery', title: 'White-glove delivery', sub: 'Covered trailer, anywhere in the GTA, within 48 hours', figure: '+' + this.money(fee) },
+        { id: 'pickup', title: 'Showroom pickup', sub: '2200 Highway 7 W, Vaughan · charged & detailed', figure: 'FREE' }
+      ]),
+      needsAddress: s.form.delivery === 'delivery',
+      form: s.form,
+      setAddress: setF('address'), setDate: setF('date'),
+      contactFields: [
+        { label: 'FULL NAME', type: 'text', value: s.form.name, onChange: setF('name'), placeholder: 'Alex Chen' },
+        { label: 'EMAIL', type: 'email', value: s.form.email, onChange: setF('email'), placeholder: 'you@email.com' },
+        { label: 'PHONE', type: 'tel', value: s.form.phone, onChange: setF('phone'), placeholder: '(416) 555-0123' }
+      ],
+      reviewLines: [
+        { k: 'VEHICLE', v: dv0.year + ' ' + dv0.name },
+        { k: 'PAYMENT', v: payLabel[s.form.pay] + (s.form.pay !== 'cash' ? ' · ' + this.money(this.monthly(dv0.price) * (s.form.pay === 'lease' ? 0.72 : 1) | 0) + '/mo' : '') },
+        { k: 'DELIVERY', v: s.form.delivery === 'delivery' ? 'White-glove · ' + (s.form.address || 'address TBD') : 'Showroom pickup · Vaughan' },
+        { k: 'DATE', v: s.form.date || 'To be arranged' },
+        { k: 'CONTACT', v: [s.form.name, s.form.phone || s.form.email].filter(Boolean).join(' · ') || '—' },
+        { k: 'EST. TOTAL (HST + FEES)', v: this.money(total), weight: '700', color: 'var(--text)' },
+        { k: 'DUE NOW · REFUNDABLE DEPOSIT', v: this.money(500), weight: '700', color: th.accent, line: 'transparent' }
+      ].map(r => ({ weight: '500', color: 'var(--text)', line: 'var(--line)', ...r })),
+      canGoBack: s.step > 1,
+      prevStep: () => this.setState({ step: Math.max(1, s.step - 1) }),
+      nextStep: () => {
+        if (s.step === 3 && !stepValid) return;
+        if (s.step < 4) { this.setState({ step: s.step + 1 }); window.scrollTo({ top: 0 }); }
+        else this.setState({ done: true });
+      },
+      nextOpacity: stepValid ? '1' : '0.45',
+      nextLabel: s.step < 4 ? 'CONTINUE →' : 'PLACE $500 REFUNDABLE HOLD',
+      refCode: 'VM-' + (dv0.id.toUpperCase().slice(0, 4)) + '-2607',
+      deliveryWord: s.form.delivery === 'delivery' ? 'delivery' : 'pickup'
+    };
+  }
+}
+</script>
+</body>
+</html>
